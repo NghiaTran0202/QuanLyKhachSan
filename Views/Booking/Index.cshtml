@@ -1,0 +1,216 @@
+﻿@model IEnumerable<quanlykhachsan.Models.Booking>
+
+@{
+    ViewData["Title"] = "Quản lý đặt phòng";
+}
+
+<div class="container-fluid mt-4 px-4">
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Success"]
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert"
+                    aria-label="Close">
+            </button>
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["Error"]
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert"
+                    aria-label="Close">
+            </button>
+        </div>
+    }
+
+    <div class="d-flex justify-content-between mb-3">
+
+        <h2>QUẢN LÝ ĐẶT & LƯU TRÚ</h2>
+
+        <a asp-action="Create" class="btn btn-success">
+            + Đặt phòng
+        </a>
+
+    </div>
+
+    <div class="table-responsive">
+
+        <table class="table table-bordered table-hover text-nowrap">
+
+            <thead class="table-dark">
+
+                <tr>
+                    <th>Mã</th>
+                    <th>Khách hàng</th>
+                    <th>Phòng</th>
+                    <th>Check In dự kiến</th>
+                    <th>Check In thực tế</th>
+                    <th>Check Out dự kiến</th>
+                    <th>Số người</th>
+                    <th>Tổng tiền</th>
+                    <th>Giờ trả thực tế</th>
+                    <th>Trạng thái</th>
+                    <th>Loại thuê</th>
+                    <th>Chức năng</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                @foreach (var item in Model)
+                {
+                    <tr>
+
+                        <td>@item.BookingId</td>
+
+                        <td>@item.Customer?.FullName</td>
+
+                        <td>@item.Room?.RoomNumber</td>
+
+                        <td>
+                            @item.CheckInDate.ToString("dd/MM/yyyy HH:mm")
+                        </td>
+
+                        <td>
+                            @(item.ActualCheckInTime?.ToString("dd/MM/yyyy HH:mm")
+                                ?? "Chưa nhận")
+                        </td>
+
+                        <td>
+                            @item.CheckOutDate.ToString("dd/MM/yyyy HH:mm")
+                        </td>
+
+                        <td>@item.NumberOfGuests</td>
+
+                        <td>
+                            @item.TotalAmount.ToString("N0") VNĐ
+                        </td>
+
+                        <td>
+                            @(item.ActualCheckOutTime?.ToString("dd/MM/yyyy HH:mm")
+                                ?? "Chưa trả")
+                        </td>
+
+                        <td>
+                            @if (item.Status == "DaTraPhong")
+                            {
+                                <span class="badge bg-success">
+                                    Đã trả phòng
+                                </span>
+                            }
+                            else if (item.Status == "Đã đặt")
+                            {
+                                <span class="badge bg-secondary">
+                                    Đã đặt
+                                </span>
+                            }
+                            else if (item.Status == "Đang thuê")
+                            {
+                                <span class="badge bg-warning text-dark">
+                                    Đang thuê
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">
+                                    @item.Status
+                                </span>
+                            }
+                        </td>
+
+                        <td>
+                            @if (item.BookingType == "Gio")
+                            {
+                                <span>Theo giờ</span>
+                            }
+                            else
+                            {
+                                <span>Theo ngày</span>
+                            }
+                        </td>
+
+                        <td>
+
+                            <a asp-action="Details"
+                               asp-route-id="@item.BookingId"
+                               class="btn btn-warning btn-sm">
+                                Chi tiết
+                            </a>
+
+                            @if (item.Status != "DaTraPhong")
+                            {
+                                <a asp-action="Edit"
+                                   asp-route-id="@item.BookingId"
+                                   class="btn btn-warning btn-sm">
+                                    Sửa
+                                </a>
+                            }
+
+                            @if (item.Status == "Đã đặt")
+                            {
+                                <form asp-action="CheckIn"
+                                      asp-route-id="@item.BookingId"
+                                      method="post"
+                                      class="d-inline">
+
+                                    @Html.AntiForgeryToken()
+
+                                    <button type="submit"
+                                            class="btn btn-warning btn-sm">
+                                        Nhận phòng
+                                    </button>
+
+                                </form>
+                            }
+
+                            @if (item.Status == "Đang thuê")
+                            {
+                                <a asp-action="ChangeRoom"
+                                   asp-route-id="@item.BookingId"
+                                   class="btn btn-warning btn-sm">
+                                    Đổi phòng
+                                </a>
+
+                                <a asp-action="CheckOut"
+                                   asp-route-id="@item.BookingId"
+                                   class="btn btn-warning btn-sm">
+                                    Trả phòng
+                                </a>
+                            }
+
+                            @if (item.Status != "DaTraPhong")
+                            {
+                                <a asp-action="Delete"
+                                   asp-route-id="@item.BookingId"
+                                   class="btn btn-warning btn-sm">
+                                    Xóa
+                                </a>
+                            }
+
+                            @if (item.Status == "DaTraPhong")
+                            {
+                                <span class="text-success ms-1">
+                                    Đã hoàn tất
+                                </span>
+                            }
+
+                        </td>
+
+                    </tr>
+                }
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>

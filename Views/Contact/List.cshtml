@@ -1,0 +1,79 @@
+﻿@model IEnumerable<quanlykhachsan.Models.Contact>
+
+@{
+    ViewData["Title"] = "Liên hệ khách hàng";
+}
+
+<div class="container mt-4">
+
+    <h2 class="mb-4">DANH SÁCH LIÊN HỆ KHÁCH HÀNG</h2>
+
+    <table class="table table-bordered table-hover table-striped">
+
+        <thead class="table-dark">
+
+            <tr>
+                <th>STT</th>
+                <th>Họ tên</th>
+                <th>Số điện thoại</th>
+                <th>Email</th>
+                <th>Nội dung</th>
+                <th>Ngày gửi</th>
+                <th width="100">Thao tác</th>
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            @{
+                int stt = 1;
+            }
+
+            @foreach (var item in Model)
+            {
+                <tr>
+
+                    <td>@stt</td>
+
+                    <td>@item.FullName</td>
+
+                    <td>@item.Phone</td>
+
+                    <td>@item.Email</td>
+
+                    <td>@item.Message</td>
+
+                    <td>@item.CreatedDate.ToString("dd/MM/yyyy HH:mm")</td>
+
+                    <td>
+
+                        <a asp-action="Details"
+                           asp-route-id="@item.ContactId"
+                           class="btn btn-primary btn-sm">
+
+                            Xem
+
+                        </a>
+
+                        <a asp-action="Delete"
+                           asp-route-id="@item.ContactId"
+                           class="btn btn-danger btn-sm"
+                           onclick="return confirm('Bạn có chắc muốn xóa?');">
+
+                            Xóa
+
+                        </a>
+
+                    </td>
+
+                </tr>
+
+                stt++;
+            }
+
+        </tbody>
+
+    </table>
+
+</div>

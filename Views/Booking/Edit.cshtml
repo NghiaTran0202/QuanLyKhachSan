@@ -1,0 +1,122 @@
+﻿@model quanlykhachsan.Models.Booking
+
+@{
+    ViewData["Title"] = "Sửa đặt phòng";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">SỬA ĐẶT PHÒNG</h2>
+
+    <form asp-action="Edit" asp-route-id="@Model.BookingId" method="post">
+        <input type="hidden" asp-for="BookingId" />
+
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+        <div class="mb-3">
+            <label class="form-label">Khách hàng</label>
+            <select name="CustomerId"
+                    class="form-select"
+                    asp-items="@(new SelectList(ViewBag.Customers, "CustomerId", "FullName", Model.CustomerId))">
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Phòng</label>
+            <input class="form-control"
+                   value="@(Model.Room != null ? Model.Room.RoomNumber : Model.RoomId.ToString())"
+                   readonly />
+            <div class="form-text">
+                Muốn đổi phòng, hãy sử dụng chức năng Đổi phòng trong danh sách đặt phòng.
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Loại thuê</label>
+            <input class="form-control"
+                   value="@(Model.BookingType == "Gio" ? "Theo giờ" : "Theo ngày")"
+                   readonly />
+        </div>
+
+        @if (Model.BookingType == "Gio")
+        {
+            <div class="mb-3">
+                <label class="form-label">Thời gian nhận phòng dự kiến</label>
+                <input name="CheckInDate"
+                       type="datetime-local"
+                       class="form-control"
+                       value="@Model.CheckInDate.ToString("yyyy-MM-ddTHH:mm")"
+                       required />
+            </div>
+
+            <input type="hidden"
+                   name="CheckOutDate"
+                   value="@Model.CheckOutDate.ToString("yyyy-MM-ddTHH:mm")" />
+
+            <div class="mb-3">
+                <label class="form-label">Số giờ thuê</label>
+                <input name="HoursBooked"
+                       type="number"
+                       min="1"
+                       class="form-control"
+                       value="@Model.HoursBooked"
+                       required />
+            </div>
+        }
+        else
+        {
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Ngày nhận phòng</label>
+                    <input name="CheckInDate"
+                           type="date"
+                           class="form-control"
+                           value="@Model.CheckInDate.ToString("yyyy-MM-dd")"
+                           required />
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Ngày trả phòng</label>
+                    <input name="CheckOutDate"
+                           type="date"
+                           class="form-control"
+                           value="@Model.CheckOutDate.ToString("yyyy-MM-dd")"
+                           required />
+                </div>
+            </div>
+
+            <input type="hidden"
+                   name="HoursBooked"
+                   value="@Model.HoursBooked" />
+        }
+
+        <div class="mb-3">
+            <label class="form-label">Số người</label>
+            <input name="NumberOfGuests"
+                   type="number"
+                   min="1"
+                   max="20"
+                   class="form-control"
+                   value="@Model.NumberOfGuests"
+                   required />
+            @Html.ValidationMessage(
+                "NumberOfGuests",
+                null,
+                new { @class = "text-danger" }
+            )
+        </div>
+
+        <button type="submit" class="btn btn-warning">
+            Lưu
+        </button>
+
+        <a asp-action="Index" class="btn btn-secondary">
+            Quay lại
+        </a>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

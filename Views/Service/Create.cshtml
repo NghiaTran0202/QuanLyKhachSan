@@ -1,0 +1,87 @@
+﻿@model quanlykhachsan.Models.Service
+
+@{
+    ViewData["Title"] = "Thêm dịch vụ";
+}
+
+<h2 class="mb-3">THÊM DỊCH VỤ</h2>
+
+<form asp-action="Create"
+      method="post"
+      enctype="multipart/form-data">
+
+    <div class="mb-3">
+        <label asp-for="ServiceName" class="form-label">
+            Tên dịch vụ
+        </label>
+
+        <input asp-for="ServiceName"
+               class="form-control" />
+
+        <span asp-validation-for="ServiceName"
+              class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Price" class="form-label">
+            Giá
+        </label>
+
+        <input asp-for="Price"
+               class="form-control"
+               type="number"
+               min="0"
+               step="1000" />
+
+        <span asp-validation-for="Price"
+              class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Description" class="form-label">
+            Mô tả
+        </label>
+
+        <textarea asp-for="Description"
+                  class="form-control"
+                  rows="4"></textarea>
+
+        <span asp-validation-for="Description"
+              class="text-danger"></span>
+    </div>
+
+       <div class="mb-3">
+
+        <label asp-for="ImageFile"
+               class="form-label">
+            Ảnh dịch vụ
+        </label>
+
+        <input asp-for="ImageFile"
+               type="file"
+               class="form-control"
+               accept="image/*" />
+
+        <span asp-validation-for="ImageFile"
+              class="text-danger"></span>
+
+    </div>
+
+    <button type="submit"
+            class="btn btn-success">
+        Lưu
+    </button>
+
+    <a asp-action="Index"
+       class="btn btn-secondary">
+        Quay lại
+    </a>
+
+</form>
+
+@section Scripts
+{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

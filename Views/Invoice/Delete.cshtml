@@ -1,0 +1,51 @@
+﻿@model quanlykhachsan.Models.Invoice
+
+@{
+    ViewData["Title"] = "Xóa hóa đơn";
+}
+
+<h2 class="text-danger">XÓA HÓA ĐƠN</h2>
+
+<div class="alert alert-warning">
+    Bạn có chắc chắn muốn xóa hóa đơn này không?
+</div>
+
+<div class="card shadow">
+
+    <div class="card-body">
+
+        <dl class="row">
+
+            <dt class="col-sm-4">Mã hóa đơn</dt>
+            <dd class="col-sm-8">@Model.InvoiceId</dd>
+
+            <dt class="col-sm-4">Mã đặt phòng</dt>
+            <dd class="col-sm-8">@Model.BookingId</dd>
+
+            <dt class="col-sm-4">Ngày lập</dt>
+            <dd class="col-sm-8">@Model.InvoiceDate.ToString("dd/MM/yyyy")</dd>
+
+            <dt class="col-sm-4">Tổng tiền</dt>
+            <dd class="col-sm-8 text-danger fw-bold">
+                @Model.TotalAmount.ToString("N0") VNĐ
+            </dd>
+
+        </dl>
+
+        <form asp-action="Delete">
+
+            <input type="hidden" asp-for="InvoiceId" />
+
+            <button type="submit" class="btn btn-danger">
+                Xóa
+            </button>
+
+            <a asp-action="Index" class="btn btn-secondary">
+                Hủy
+            </a>
+
+        </form>
+
+    </div>
+
+</div>

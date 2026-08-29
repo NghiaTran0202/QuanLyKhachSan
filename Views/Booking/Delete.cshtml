@@ -1,0 +1,60 @@
+﻿@model quanlykhachsan.Models.Booking
+
+@{
+    ViewData["Title"] = "Xóa đặt phòng";
+}
+
+<div class="container mt-4">
+    <h2 class="text-danger mb-4">XÓA ĐẶT PHÒNG</h2>
+
+    <div class="alert alert-warning">
+        Bạn có chắc chắn muốn xóa booking này không?
+    </div>
+
+    <div class="card shadow">
+        <div class="card-body">
+            <p>
+                <strong>Mã đặt phòng:</strong>
+                @Model.BookingId
+            </p>
+
+            <p>
+                <strong>Khách hàng:</strong>
+                @Model.Customer?.FullName
+            </p>
+
+            <p>
+                <strong>Phòng:</strong>
+                @Model.Room?.RoomNumber
+            </p>
+
+            <p>
+                <strong>Ngày nhận:</strong>
+                @Model.CheckInDate.ToString("dd/MM/yyyy HH:mm")
+            </p>
+
+            <p>
+                <strong>Trạng thái:</strong>
+                @Model.Status
+            </p>
+
+            <div class="alert alert-danger">
+                Khi xóa booking, hóa đơn, dịch vụ đã sử dụng và lịch sử đổi phòng liên quan đến booking này cũng sẽ bị xóa.
+            </div>
+
+            <form asp-action="Delete" method="post">
+                <input type="hidden" asp-for="BookingId" />
+
+                <button type="submit"
+                        class="btn btn-warning">
+                    Xóa
+                </button>
+
+                <a asp-action="Index"
+                   class="btn btn-secondary">
+                    Hủy
+                </a>
+            </form>
+        </div>
+    </div>
+</div>

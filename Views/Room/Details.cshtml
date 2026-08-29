@@ -1,0 +1,63 @@
+﻿@model quanlykhachsan.Models.Room
+
+@{
+    ViewData["Title"] = "Chi tiết phòng";
+}
+
+<h2 class="mb-3">CHI TIẾT PHÒNG</h2>
+
+<div class="card shadow">
+
+    <div class="card-body">
+
+        <dl class="row">
+
+            <dt class="col-sm-3">Số phòng</dt>
+            <dd class="col-sm-9">@Model.RoomNumber</dd>
+
+            <dt class="col-sm-3">Tên phòng</dt>
+            <dd class="col-sm-9">@Model.RoomName</dd>
+
+            <dt class="col-sm-3">Loại phòng</dt>
+            <dd class="col-sm-9">@Model.RoomType?.TypeName</dd>
+
+            <dt class="col-sm-3">Giá</dt>
+            <dd class="col-sm-9">@Model.Price.ToString("N0") VNĐ</dd>
+
+            <dt class="col-sm-3">Trạng thái</dt>
+            <dd class="col-sm-9">
+                @(Model.Status ? "Đã sử dụng" : "Còn trống")
+            </dd>
+
+            <dt class="col-sm-3">Ảnh</dt>
+            <dd class="col-sm-9">
+
+                @if (!string.IsNullOrEmpty(Model.Image))
+                {
+                    <img src="~/uploads/@Model.Image"
+                         width="250"
+                         class="img-thumbnail" />
+                }
+                else
+                {
+                    <span class="text-danger">Chưa có ảnh</span>
+                }
+
+            </dd>
+
+        </dl>
+
+        <a asp-action="Edit"
+           asp-route-id="@Model.RoomId"
+           class="btn btn-warning">
+            Sửa
+        </a>
+
+        <a asp-action="Index"
+           class="btn btn-secondary">
+            Quay lại
+        </a>
+
+    </div>
+
+</div>

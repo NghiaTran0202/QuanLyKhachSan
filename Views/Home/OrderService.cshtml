@@ -1,0 +1,108 @@
+﻿@{
+    ViewData["Title"] = "Đặt dịch vụ";
+    var service = ViewBag.Service as quanlykhachsan.Models.Service;
+}
+
+<div class="container mt-5 mb-5">
+
+    <div class="card shadow mx-auto" style="max-width:650px;">
+
+        <div class="card-header text-white text-center py-3" style="background:var(--color-primary);">
+            <h2 class="mb-0 text-white fst-italic">ĐẶT DỊCH VỤ</h2>
+        </div>
+
+        <div class="card-body p-4">
+
+            @if (service != null)
+            {
+                <div class="text-center mb-4">
+
+                    <h3>
+                        @service.ServiceName
+                    </h3>
+
+                    <h5 class="text-danger">
+                        @service.Price.ToString("N0") VNĐ
+                    </h5>
+
+                </div>
+
+                @if (ViewBag.Error != null)
+                {
+                    <div class="alert alert-danger">
+                        @ViewBag.Error
+                    </div>
+                }
+
+                <form asp-controller="Home"
+                      asp-action="OrderService"
+                      method="post">
+
+                    @Html.AntiForgeryToken()
+
+                    <input type="hidden"
+                           name="serviceId"
+                           value="@service.ServiceId" />
+
+                    <div class="mb-3">
+
+                        <label class="form-label fw-bold">
+                            Tên khách hàng
+                        </label>
+
+                        <input type="text"
+                               name="customerName"
+                               class="form-control"
+                               placeholder="Nhập đúng tên khi đặt phòng"
+                               required />
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label class="form-label fw-bold">
+                            Số phòng
+                        </label>
+
+                        <input type="text"
+                               name="roomNumber"
+                               class="form-control"
+                               placeholder="Ví dụ: 101"
+                               required />
+
+                    </div>
+
+                    <div class="mb-4">
+
+                        <label class="form-label fw-bold">
+                            Số lượng
+                        </label>
+
+                        <input type="number"
+                               name="quantity"
+                               value="1"
+                               min="1"
+                               class="form-control"
+                               required />
+
+                    </div>
+
+                    <button type="submit"
+                            class="btn btn-success btn-lg w-100">
+                        Xác nhận đặt dịch vụ
+                    </button>
+
+                </form>
+            }
+            else
+            {
+                <div class="alert alert-danger">
+                    Không tìm thấy thông tin dịch vụ.
+                </div>
+            }
+
+        </div>
+
+    </div>
+
+</div>

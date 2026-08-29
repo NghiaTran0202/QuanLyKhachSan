@@ -1,0 +1,129 @@
+﻿@model quanlykhachsan.Models.Contact
+
+@{
+    ViewData["Title"] = "Liên hệ";
+}
+
+<div class="page-banner">
+    <p>Chúng tôi luôn lắng nghe</p>
+    <h2>Liên hệ</h2>
+</div>
+
+<div class="container mt-4 mb-5">
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["Success"]
+        </div>
+    }
+
+    <div class="row">
+
+        <div class="col-md-6">
+
+            <h4>Thông tin liên hệ</h4>
+
+            <p><strong>📧 Email:</strong> CtrlShifNt@gmail.com</p>
+
+            <p><strong>📞 Điện thoại:</strong> 123456789</p>
+
+            <p>
+                <i class="fab fa-facebook text-primary fa-2x"></i>
+
+                <strong>Facebook:</strong>
+
+                <a target="_blank">
+                    Ctrl ShiftN
+                </a>
+            </p>
+
+            <p>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Icon_of_Zalo.svg"
+                     width="32"
+                     height="32" />
+
+                <strong>Zalo:</strong>
+
+                123456789
+            </p>
+
+            <iframe src="https://www.google.com/maps?q=Đại%20học%20Bình%20Dương%20Phân%20hiệu%20Cà%20Mau&output=embed"
+                    width="100%"
+                    height="350"
+                    style="border:0;"
+                    allowfullscreen=""
+                    loading="lazy">
+            </iframe>
+
+        </div>
+
+        <div class="col-md-6">
+
+            <h4>Biểu mẫu liên hệ</h4>
+
+            <form asp-action="Index" method="post" class="form-card">
+
+                <div class="mb-3">
+
+                    <label>Họ tên</label>
+
+                    <input asp-for="FullName"
+                           class="form-control" />
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label>Số điện thoại</label>
+
+                    <input asp-for="Phone"
+                           class="form-control" />
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label>Email</label>
+
+                    <input asp-for="Email"
+                           class="form-control" />
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label>Ghi chú</label>
+
+                    <textarea asp-for="Message"
+                              rows="5"
+                              class="form-control"></textarea>
+
+                </div>
+
+                <div class="form-check mb-3">
+
+                    <input asp-for="IsAnonymous"
+                           class="form-check-input" />
+
+                    <label class="form-check-label">
+
+                        Gửi ẩn danh
+
+                    </label>
+
+                </div>
+
+                <button class="btn btn-success">
+
+                    Gửi liên hệ
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>

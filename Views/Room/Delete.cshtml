@@ -1,0 +1,41 @@
+﻿@model quanlykhachsan.Models.Room
+
+@{
+    ViewData["Title"] = "Xóa phòng";
+}
+
+<h2 class="text-danger">XÓA PHÒNG</h2>
+
+<div class="alert alert-warning">
+    Bạn có chắc chắn muốn xóa phòng này không?
+</div>
+
+<div class="card shadow">
+
+    <div class="card-body">
+
+        <h4>@Model.RoomName</h4>
+
+        <p><strong>Số phòng:</strong> @Model.RoomNumber</p>
+
+        <p><strong>Giá:</strong> @Model.Price.ToString("N0") VNĐ</p>
+
+        <form asp-action="Delete">
+
+            <input type="hidden"
+                   asp-for="RoomId" />
+
+            <button class="btn btn-danger">
+                Xóa
+            </button>
+
+            <a asp-action="Index"
+               class="btn btn-secondary">
+                Hủy
+            </a>
+
+        </form>
+
+    </div>
+
+</div>

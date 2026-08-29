@@ -1,0 +1,46 @@
+﻿@model quanlykhachsan.Models.Service
+
+@{
+    ViewData["Title"] = "Xóa dịch vụ";
+}
+
+<h2 class="text-danger">XÓA DỊCH VỤ</h2>
+
+<div class="alert alert-warning">
+    Bạn có chắc chắn muốn xóa dịch vụ này không?
+</div>
+
+<div class="card shadow">
+
+    <div class="card-body">
+
+        <dl class="row">
+
+            <dt class="col-sm-3">Tên dịch vụ</dt>
+            <dd class="col-sm-9">@Model.ServiceName</dd>
+
+            <dt class="col-sm-3">Giá</dt>
+            <dd class="col-sm-9">@Model.Price.ToString("N0") VNĐ</dd>
+
+            <dt class="col-sm-3">Mô tả</dt>
+            <dd class="col-sm-9">@Model.Description</dd>
+
+        </dl>
+
+        <form asp-action="Delete">
+
+            <input asp-for="ServiceId" type="hidden" />
+
+            <button type="submit" class="btn btn-danger">
+                Xóa
+            </button>
+
+            <a asp-action="Index" class="btn btn-secondary">
+                Hủy
+            </a>
+
+        </form>
+
+    </div>
+
+</div>

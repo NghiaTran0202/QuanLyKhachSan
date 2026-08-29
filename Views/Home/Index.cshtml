@@ -1,0 +1,486 @@
+﻿@{
+    ViewData["Title"] = "Trang chủ";
+}
+
+<div class="hero">
+
+    <img src="~/images/anhbia.png"
+         alt="Khách sạn"
+         class="hero-bg-img" />
+
+    <div class="hero-overlay-gradient"></div>
+
+    <div class="hero-inner">
+
+        <span class="hero-eyebrow">
+            Chào mừng đến với CTRL SHIFT N HOTEL
+        </span>
+
+        <h1>
+            Hệ thống quản lý<br />
+            <span class="hero-title-accent">
+                khách sạn
+            </span>
+        </h1>
+
+        <div class="hero-divider"></div>
+
+        <p class="hero-desc">
+            Chào mừng bạn đến với website quản lý khách sạn.
+            Hệ thống hỗ trợ quản lý phòng, khách hàng,
+            đặt phòng và hóa đơn.
+        </p>
+
+        <div class="hero-cta-row">
+
+            <a asp-controller="Home"
+               asp-action="Rooms"
+               class="btn btn-outline-hero btn-lg">
+                <i class="bi bi-door-open me-2"></i>
+                Xem danh sách phòng
+            </a>
+
+        </div>
+
+    </div>
+
+    <div class="hero-scroll-indicator">
+        <i class="bi bi-chevron-double-down"></i>
+    </div>
+
+</div>
+
+<div class="welcome-section">
+
+    <div class="row align-items-center g-5">
+
+        <div class="col-lg-6">
+
+            <span class="welcome-eyebrow">
+                Chào mừng đến với khách sạn
+            </span>
+
+            <h2>
+                Cảm giác như ở nhà
+            </h2>
+
+            <p>
+                Chào mừng bạn đến với website quản lý khách sạn.
+                Hệ thống hỗ trợ quản lý phòng, khách hàng,
+                đặt phòng và hóa đơn một cách nhanh chóng, chính xác
+                và tiện lợi, giúp quý khách có trải nghiệm đặt phòng
+                thoải mái như đang ở chính ngôi nhà của mình.
+            </p>
+
+            <a asp-controller="Home"
+               asp-action="Services"
+               class="btn btn-secondary mt-3">
+                Khám phá dịch vụ
+            </a>
+
+        </div>
+
+        <div class="col-lg-6">
+
+            <div class="welcome-img-wrap">
+
+                <img src="~/images/phong2.jpg"
+                     alt="Không gian khách sạn" />
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="advantages-section">
+
+    <div class="container">
+
+        <div class="advantages-header">
+
+            <span class="eyebrow">
+                Tại sao chọn chúng tôi
+            </span>
+
+            <h2>
+                Lợi thế
+            </h2>
+
+        </div>
+
+        <div class="row">
+
+            <div class="col-md-6 col-lg-4">
+
+                <div class="advantage-item">
+
+                    <div class="advantage-icon">
+                        <i class="bi bi-tag"></i>
+                    </div>
+
+                    <div class="advantage-text">
+
+                        <h5>
+                            Đảm bảo giá tốt nhất
+                        </h5>
+
+                        <p>
+                            Mang đến mức giá hợp lý khi đặt phòng
+                            trực tiếp trên hệ thống.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+
+                <div class="advantage-item">
+
+                    <div class="advantage-icon">
+                        <i class="bi bi-stars"></i>
+                    </div>
+
+                    <div class="advantage-text">
+
+                        <h5>
+                            Không gian sang trọng
+                        </h5>
+
+                        <p>
+                            Không gian nghỉ dưỡng hiện đại,
+                            tiện nghi và thoải mái cho quý khách.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+
+                <div class="advantage-item">
+
+                    <div class="advantage-icon">
+                        <i class="bi bi-wifi"></i>
+                    </div>
+
+                    <div class="advantage-text">
+
+                        <h5>
+                            Wifi miễn phí
+                        </h5>
+
+                        <p>
+                            Kết nối internet tốc độ cao miễn phí
+                            trong toàn bộ khách sạn.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+
+                <div class="advantage-item">
+
+                    <div class="advantage-icon">
+                        <i class="bi bi-people"></i>
+                    </div>
+
+                    <div class="advantage-text">
+
+                        <h5>
+                            Tổ chức sự kiện - Hội họp
+                        </h5>
+
+                        <p>
+                            Không gian sang trọng cho các cuộc họp
+                            và sự kiện của quý khách.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+
+                <div class="advantage-item">
+
+                    <div class="advantage-icon">
+                        <i class="bi bi-headset"></i>
+                    </div>
+
+                    <div class="advantage-text">
+
+                        <h5>
+                            Hỗ trợ 24/7
+                        </h5>
+
+                        <p>
+                            Đội ngũ luôn sẵn sàng hỗ trợ
+                            quý khách mọi lúc.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+
+                <div class="advantage-item">
+
+                    <div class="advantage-icon">
+                        <i class="bi bi-heart"></i>
+                    </div>
+
+                    <div class="advantage-text">
+
+                        <h5>
+                            Dịch vụ tận tâm
+                        </h5>
+
+                        <p>
+                            Luôn chú trọng sự chu đáo và trải nghiệm
+                            của khách hàng trong suốt kỳ nghỉ.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<section class="hotel-showcase">
+
+    <div class="showcase-heading">
+
+        <span class="showcase-eyebrow">
+            Trải nghiệm khác biệt
+        </span>
+
+        <h2>
+            Tận hưởng kỳ nghỉ theo cách của bạn
+        </h2>
+
+        <p>
+            Không gian tinh tế, tiện nghi hiện đại
+            và dịch vụ tận tâm trong từng khoảnh khắc.
+        </p>
+
+    </div>
+
+    <div class="showcase-feature">
+
+        <div class="showcase-feature-image">
+
+            <img src="~/images/mark1.jfif"
+                 alt="Không gian nghỉ dưỡng sang trọng" />
+
+        </div>
+
+        <div class="showcase-feature-content">
+
+            <span class="showcase-number">
+                01
+            </span>
+
+            <span class="showcase-label">
+                Không gian nghỉ dưỡng
+            </span>
+
+            <h2>
+                Nghỉ dưỡng trong không gian
+                sang trọng và tinh tế
+            </h2>
+
+            <div class="showcase-line"></div>
+
+            <p>
+                Mỗi không gian được chăm chút để tạo nên
+                sự hài hòa giữa tiện nghi, riêng tư và thoải mái.
+                Từ thiết kế nội thất đến từng chi tiết nhỏ,
+                chúng tôi mong muốn mang đến cho quý khách
+                một kỳ nghỉ thật sự thư giãn và đáng nhớ.
+            </p>
+
+            <a asp-controller="Home"
+               asp-action="Rooms"
+               class="showcase-link">
+                Khám phá phòng nghỉ
+                <i class="bi bi-arrow-right"></i>
+            </a>
+
+        </div>
+
+    </div>
+
+    <div class="showcase-service">
+
+        <div class="showcase-service-content">
+
+            <span class="showcase-number">
+                02
+            </span>
+
+            <span class="showcase-label">
+                Dịch vụ chuyên nghiệp
+            </span>
+
+            <h2>
+                Sự tận tâm tạo nên
+                những trải nghiệm đáng nhớ
+            </h2>
+
+            <div class="showcase-line"></div>
+
+            <p>
+                Với phong cách phục vụ chuyên nghiệp và chu đáo,
+                đội ngũ khách sạn luôn sẵn sàng hỗ trợ quý khách
+                trong suốt thời gian lưu trú.
+            </p>
+
+            <p>
+                Sự hài lòng của khách hàng là điều chúng tôi
+                luôn hướng đến trong mỗi dịch vụ.
+            </p>
+
+            <a asp-controller="Home"
+               asp-action="Services"
+               class="showcase-link">
+                Khám phá dịch vụ
+                <i class="bi bi-arrow-right"></i>
+            </a>
+
+        </div>
+
+        <div class="showcase-service-image">
+
+            <img src="~/images/mark2.jfif"
+                 alt="Dịch vụ khách sạn chuyên nghiệp" />
+
+        </div>
+
+    </div>
+
+</section>
+
+<footer style="width:100vw;margin-left:calc(50% - 50vw);margin-top:80px;">
+
+    <div class="container py-5">
+
+        <div class="row gy-4">
+
+            <div class="col-md-4">
+
+                <h6>
+                    Thông tin liên hệ
+                </h6>
+
+                <p>
+                    <b>Địa chỉ:</b>
+                    Đại học Bình Dương - Phân hiệu Cà Mau
+                </p>
+
+                <p>
+                    <b>Hotline:</b>
+                    123456789
+                </p>
+
+                <p>
+                    <b>Email:</b>
+                    ctrlshiftN@gmail.com
+                </p>
+
+            </div>
+
+            <div class="col-md-4">
+
+                <h6>
+                    Liên kết
+                </h6>
+
+                <p>
+                    <a asp-controller="Home"
+                       asp-action="Index">
+                        Trang chủ
+                    </a>
+                </p>
+
+                <p>
+                    <a asp-controller="Home"
+                       asp-action="Rooms">
+                        Danh sách phòng
+                    </a>
+                </p>
+
+                <p>
+                    <a asp-controller="Home"
+                       asp-action="Services">
+                        Dịch vụ
+                    </a>
+                </p>
+
+                <p>
+                    <a asp-controller="Contact"
+                       asp-action="Index">
+                        Liên hệ
+                    </a>
+                </p>
+
+            </div>
+
+            <div class="col-md-4">
+
+                <h6>
+                    Kết nối với chúng tôi
+                </h6>
+
+                <p>
+                    Theo dõi khách sạn trên các nền tảng mạng xã hội
+                </p>
+
+                <a href="#"
+                   class="footer-social-icon">
+                    <i class="bi bi-facebook"></i>
+                </a>
+
+                <a href="#"
+                   class="footer-social-icon">
+                    <i class="bi bi-instagram"></i>
+                </a>
+
+                <a href="#"
+                   class="footer-social-icon">
+                    <i class="bi bi-tiktok"></i>
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="footer-bottom-bar">
+        © 2026 - KHÁCH SẠN CTRL SHIFT N. All rights reserved.
+    </div>
+
+</footer>

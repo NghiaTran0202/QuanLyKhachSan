@@ -1,0 +1,285 @@
+﻿@model IEnumerable<quanlykhachsan.Models.Room>
+
+@{
+    ViewData["Title"] = "Danh sách phòng";
+}
+
+<div class="page-banner">
+    <p>Khách sạn của chúng tôi</p>
+    <h2>Danh sách phòng</h2>
+</div>
+
+<div class="container mt-4 mb-4">
+
+    <form asp-controller="Home"
+          asp-action="Rooms"
+          method="get"
+          class="form-card">
+
+        <div class="row">
+
+            <div class="col-md-3">
+
+                <label class="form-label">
+                    Loại phòng
+                </label>
+
+                <select name="roomTypeId"
+                        class="form-select">
+
+                    <option value="">
+                        -- Tất cả loại phòng --
+                    </option>
+
+                    @foreach (var item in ViewBag.RoomTypes)
+                    {
+                        if (ViewBag.SelectedRoomTypeId != null &&
+                            ViewBag.SelectedRoomTypeId == item.RoomTypeId)
+                        {
+                            <option value="@item.RoomTypeId" selected>
+                                @item.TypeName
+                            </option>
+                        }
+                        else
+                        {
+                            <option value="@item.RoomTypeId">
+                                @item.TypeName
+                            </option>
+                        }
+                    }
+
+                </select>
+
+            </div>
+
+            <div class="col-md-3">
+
+                <label class="form-label">
+                    Giá từ
+                </label>
+
+                <input type="number"
+                       name="minPrice"
+                       class="form-control"
+                       value="@ViewBag.MinPrice"
+                       min="0"
+                       placeholder="Ví dụ: 500000" />
+
+            </div>
+
+            <div class="col-md-3">
+
+                <label class="form-label">
+                    Giá đến
+                </label>
+
+                <input type="number"
+                       name="maxPrice"
+                       class="form-control"
+                       value="@ViewBag.MaxPrice"
+                       min="0"
+                       placeholder="Ví dụ: 3000000" />
+
+            </div>
+
+            <div class="col-md-3">
+
+                <label class="form-label">
+                    Tình trạng
+                </label>
+
+                <select name="availability"
+                        class="form-select">
+
+                    <option value="">
+                        -- Tất cả --
+                    </option>
+
+                    @if (ViewBag.Availability == "available")
+                    {
+                        <option value="available" selected>
+                            Còn phòng
+                        </option>
+                    }
+                    else
+                    {
+                        <option value="available">
+                            Còn phòng
+                        </option>
+                    }
+
+                    @if (ViewBag.Availability == "occupied")
+                    {
+                        <option value="occupied" selected>
+                            Đang sử dụng
+                        </option>
+                    }
+                    else
+                    {
+                        <option value="occupied">
+                            Đang sử dụng
+                        </option>
+                    }
+
+                </select>
+
+            </div>
+
+        </div>
+
+        <br />
+
+        <div class="d-flex gap-2 flex-wrap">
+
+            <button type="submit"
+                    class="btn btn-warning">
+
+                Tìm phòng
+
+            </button>
+
+            <a asp-controller="Home"
+               asp-action="Rooms"
+               class="btn btn-secondary">
+
+                Xóa bộ lọc
+
+            </a>
+
+            <a asp-controller="Home"
+               asp-action="Booking"
+               class="btn btn-success">
+
+                Đặt phòng theo thời gian
+
+            </a>
+
+        </div>
+
+    </form>
+
+</div>
+
+<div class="container mb-5">
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-warning">
+            Không tìm thấy phòng phù hợp với điều kiện đã chọn.
+        </div>
+    }
+    else
+    {
+        <div class="row">
+
+            @foreach (var room in Model)
+            {
+                <div class="col-md-4 mb-4">
+
+                    <div class="card shadow h-100">
+
+                        <img src="~/uploads/@room.Image"
+                             class="card-img-top"
+                             style="height:250px;object-fit:cover;"
+                             alt="@room.RoomName" />
+
+                        <div class="card-body">
+
+                            <h4>@room.RoomName</h4>
+
+                            <p>
+                                Số phòng:
+                                @room.RoomNumber
+                            </p>
+
+                            <p>
+                                Loại phòng:
+                                @room.RoomType?.TypeName
+                            </p>
+
+                            <p>
+                                Giá:
+                                @room.Price.ToString("N0") VNĐ
+                            </p>
+
+                            <p>
+                                Trạng thái hiện tại:
+                                @(room.Status ? "Đang sử dụng" : "Còn phòng")
+                            </p>
+
+                            @{
+                                var roomBookings =
+                                    ViewBag.RoomBookings as Dictionary<int, List<quanlykhachsan.Models.Booking>>;
+
+                                var schedules =
+                                    roomBookings != null &&
+                                    roomBookings.ContainsKey(room.RoomId)
+                                        ? roomBookings[room.RoomId]
+                                        : new List<quanlykhachsan.Models.Booking>();
+                            }
+
+                            <div class="alert alert-warning">
+
+                                <div class="mb-2">
+                                    <strong>
+                                        Lịch đã đặt trong 30 ngày tới
+                                    </strong>
+                                </div>
+
+                                @if (schedules.Any())
+                                {
+                                    @foreach (var booking in schedules)
+                                    {
+                                        <div class="mb-2">
+
+                                            @if (booking.BookingType == "Gio")
+                                            {
+                                                <span class="badge bg-warning text-dark">
+                                                    Theo giờ
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-primary">
+                                                    Theo ngày
+                                                </span>
+                                            }
+
+                                            <span>
+                                                @booking.CheckInDate.ToString("dd/MM/yyyy HH:mm")
+                                                →
+                                                @booking.CheckOutDate.ToString("dd/MM/yyyy HH:mm")
+                                            </span>
+
+                                        </div>
+                                    }
+                                }
+                                else
+                                {
+                                    <div>
+                                        Chưa có lịch đặt trong 30 ngày tới.
+                                    </div>
+                                }
+
+                            </div>
+
+                            <a asp-controller="Home"
+                               asp-action="Booking"
+                               asp-route-roomId="@room.RoomId"
+                               class="btn btn-warning w-100">
+
+                                Đặt phòng
+
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            }
+
+        </div>
+    }
+
+</div>

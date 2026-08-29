@@ -1,0 +1,118 @@
+﻿@model quanlykhachsan.Models.Service
+
+@{
+    ViewData["Title"] = "Sửa dịch vụ";
+}
+
+<h2 class="mb-3">SỬA DỊCH VỤ</h2>
+
+<form asp-action="Edit"
+      method="post"
+      enctype="multipart/form-data">
+
+    <input asp-for="ServiceId" type="hidden" />
+
+    <div class="mb-3">
+        <label asp-for="ServiceName" class="form-label">
+            Tên dịch vụ
+        </label>
+
+        <input asp-for="ServiceName"
+               class="form-control" />
+
+        <span asp-validation-for="ServiceName"
+              class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Price" class="form-label">
+            Giá
+        </label>
+
+        <input asp-for="Price"
+               class="form-control"
+               type="number"
+               min="0"
+               step="1000" />
+
+        <span asp-validation-for="Price"
+              class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Description" class="form-label">
+            Mô tả
+        </label>
+
+        <textarea asp-for="Description"
+                  class="form-control"
+                  rows="4"></textarea>
+
+        <span asp-validation-for="Description"
+              class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+
+        <label class="form-label">
+            Ảnh hiện tại
+        </label>
+
+        <div>
+            @if (!string.IsNullOrEmpty(Model.Image))
+            {
+                <img src="~/uploads/services/@Model.Image"
+                     width="180"
+                     height="120"
+                     class="rounded border"
+                     style="object-fit: cover;" />
+            }
+            else
+            {
+                <span class="text-muted">
+                    Chưa có ảnh
+                </span>
+            }
+        </div>
+
+    </div>
+
+    <div class="mb-3">
+
+        <label asp-for="ImageFile"
+               class="form-label">
+            Chọn ảnh mới
+        </label>
+
+        <input asp-for="ImageFile"
+               type="file"
+               class="form-control"
+               accept="image/*" />
+
+        <span asp-validation-for="ImageFile"
+              class="text-danger"></span>
+
+        <small class="text-muted">
+            Nếu không chọn ảnh mới, hệ thống sẽ giữ nguyên ảnh hiện tại.
+        </small>
+
+    </div>
+
+    <button type="submit"
+            class="btn btn-primary">
+        Cập nhật
+    </button>
+
+    <a asp-action="Index"
+       class="btn btn-secondary">
+        Quay lại
+    </a>
+
+</form>
+
+@section Scripts
+{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

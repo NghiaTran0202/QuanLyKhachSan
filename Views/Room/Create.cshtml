@@ -1,0 +1,77 @@
+﻿@model quanlykhachsan.Models.Room
+
+@{
+    ViewData["Title"] = "Thêm phòng";
+}
+
+<h2 class="mb-3">THÊM PHÒNG</h2>
+
+<form asp-action="Create" method="post" enctype="multipart/form-data">
+
+    <div class="mb-3">
+        <label>Số phòng</label>
+        <input asp-for="RoomNumber" class="form-control" />
+        <span asp-validation-for="RoomNumber" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label>Tên phòng</label>
+        <input asp-for="RoomName" class="form-control" />
+        <span asp-validation-for="RoomName" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label>Loại phòng</label>
+
+        <select asp-for="RoomTypeId" class="form-select">
+
+            @foreach (var item in ViewBag.RoomTypes)
+            {
+                <option value="@item.RoomTypeId">
+                    @item.TypeName
+                </option>
+            }
+
+        </select>
+
+    </div>
+
+    <div class="mb-3">
+        <label>Giá theo ngày</label>
+        <input asp-for="Price" class="form-control" />
+        <span asp-validation-for="Price" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label>Giá giờ đầu</label>
+        <input asp-for="HourlyPrice" class="form-control" />
+        <span asp-validation-for="HourlyPrice" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+
+        <label>Ảnh phòng</label>
+
+        <input asp-for="ImageFile"
+               type="file"
+               class="form-control" />
+
+    </div>
+
+    <button type="submit"
+            class="btn btn-success">
+        Lưu
+    </button>
+
+    <a asp-action="Index"
+       class="btn btn-secondary">
+        Quay lại
+    </a>
+
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

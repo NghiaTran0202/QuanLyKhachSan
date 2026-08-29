@@ -1,0 +1,118 @@
+﻿@model IEnumerable<quanlykhachsan.Models.Service>
+
+@{
+    ViewData["Title"] = "Dịch vụ";
+}
+
+<div class="page-banner">
+    <p>Trải nghiệm đẳng cấp</p>
+    <h2>Dịch vụ khách sạn</h2>
+</div>
+
+<div class="container mt-4 mb-5">
+
+    <div class="text-center mb-5">
+
+        <p class="text-muted">
+            Lựa chọn dịch vụ bạn muốn sử dụng
+        </p>
+
+    </div>
+
+    <div class="row">
+
+        @foreach (var item in Model)
+        {
+            <div class="col-md-4 mb-4">
+
+                <div class="card shadow h-100 service-card">
+                                       
+                    @if (!string.IsNullOrEmpty(item.Image))
+                    {
+                        <img src="~/uploads/services/@item.Image"
+                             class="card-img-top service-img"
+                             alt="@item.ServiceName" />
+                    }
+                    else
+                    {
+                        <div class="no-service-image">
+                            Chưa có ảnh
+                        </div>
+                    }
+
+                    <div class="card-body text-center d-flex flex-column">
+
+                       
+                        <h3 class="fw-bold">
+                            @item.ServiceName
+                        </h3>
+                                               
+                        @if (!string.IsNullOrEmpty(item.Description))
+                        {
+                            <p class="text-muted mt-2">
+                                @item.Description
+                            </p>
+                        }
+                                               
+                        <h4 class="text-danger mt-2">
+                            @item.Price.ToString("N0") VNĐ
+                        </h4>
+
+                       
+                        <div class="mt-auto pt-4">
+
+                            <a asp-controller="Home"
+                               asp-action="OrderService"
+                               asp-route-id="@item.ServiceId"
+                               class="btn btn-success w-100">
+
+                                Đặt dịch vụ
+
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        }
+
+    </div>
+
+</div>
+
+<style>
+
+    .service-card {
+        border: none;
+        border-radius: 15px;
+        overflow: hidden;
+        transition: 0.3s;
+    }
+
+        .service-card:hover {
+            transform: translateY(-7px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2) !important;
+        }
+
+    .service-img {
+        width: 100%;
+        height: 250px;
+        object-fit: cover;
+        object-position: center;
+    }
+
+    .no-service-image {
+        width: 100%;
+        height: 250px;
+        background: #e9ecef;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #777;
+        font-size: 18px;
+    }
+
+</style>

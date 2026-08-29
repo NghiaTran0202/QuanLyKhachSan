@@ -1,0 +1,303 @@
+﻿@model quanlykhachsan.Models.Invoice
+
+@{
+    ViewData["Title"] = "Chi tiết hóa đơn";
+
+    decimal baseRoomAmount =
+        ViewBag.BaseRoomAmount != null
+        ? (decimal)ViewBag.BaseRoomAmount
+        : Model.RoomAmount;
+
+    decimal lateCheckoutFee =
+        ViewBag.LateCheckoutFee != null
+        ? (decimal)ViewBag.LateCheckoutFee
+        : 0;
+}
+
+<div class="container">
+
+    <h2 class="mb-4">
+        CHI TIẾT HÓA ĐƠN
+    </h2>
+
+    <table class="table table-bordered">
+
+        <tr>
+            <th>Mã hóa đơn</th>
+            <td>@Model.InvoiceId</td>
+        </tr>
+
+        <tr>
+            <th>Khách hàng</th>
+            <td>
+                @Model.Booking?.Customer?.FullName
+            </td>
+        </tr>
+
+        <tr>
+            <th>Phòng</th>
+            <td>
+                @Model.Booking?.Room?.RoomNumber
+            </td>
+        </tr>
+
+        <tr>
+            <th>Ngày nhận phòng</th>
+            <td>
+                @Model.Booking?.CheckInDate.ToString("dd/MM/yyyy HH:mm")
+            </td>
+        </tr>
+
+        @if (Model.Booking?.BookingType == "Gio")
+        {
+            <tr>
+                <th>Loại thuê</th>
+                <td>Theo giờ</td>
+            </tr>
+
+            <tr>
+                <th>Số giờ đã đặt</th>
+                <td>
+                    @Model.Booking.HoursBooked giờ
+                </td>
+            </tr>
+
+            <tr>
+                <th>Giờ nhận thực tế</th>
+                <td>
+                    @if (Model.Booking.ActualCheckInTime != null)
+                    {
+                        @Model.Booking.ActualCheckInTime.Value.ToString("dd/MM/yyyy HH:mm")
+                    }
+                    else
+                    {
+                        <span>Chưa nhận</span>
+                    }
+                </td>
+            </tr>
+
+            <tr>
+                <th>Giờ trả dự kiến</th>
+                <td>
+                    @Model.Booking.CheckOutDate.ToString("dd/MM/yyyy HH:mm")
+                </td>
+            </tr>
+
+            <tr>
+                <th>Giờ trả thực tế</th>
+                <td>
+                    @if (Model.Booking.ActualCheckOutTime != null)
+                    {
+                        @Model.Booking.ActualCheckOutTime.Value.ToString("dd/MM/yyyy HH:mm")
+                    }
+                    else
+                    {
+                        <span>Chưa trả</span>
+                    }
+                </td>
+            </tr>
+
+            <tr>
+                <th>Thời gian sử dụng thực tế</th>
+                <td>
+                    @{
+                        int actualHours = 0;
+                        int actualMinutes = 0;
+
+                        if (Model.Booking.ActualCheckOutTime != null)
+                        {
+                            DateTime actualStartTime =
+                                Model.Booking.ActualCheckInTime ??
+                                Model.Booking.CheckInDate;
+
+                            TimeSpan actualDuration =
+                                Model.Booking.ActualCheckOutTime.Value -
+                                actualStartTime;
+
+                            if (actualDuration.TotalMinutes > 0)
+                            {
+                                int totalMinutes =
+                                    (int)Math.Floor(
+                                        actualDuration.TotalMinutes
+                                    );
+
+                                actualHours =
+                                    totalMinutes / 60;
+
+                                actualMinutes =
+                                    totalMinutes % 60;
+                            }
+                        }
+                    }
+
+                    @actualHours giờ @actualMinutes phút
+                </td>
+            </tr>
+
+            <tr>
+                <th>Tiền phòng</th>
+                <td>
+                    @Model.RoomAmount.ToString("N0") VNĐ
+                </td>
+            </tr>
+        }
+        else
+        {
+            <tr>
+                <th>Loại thuê</th>
+                <td>Theo ngày</td>
+            </tr>
+
+            <tr>
+                <th>Ngày trả phòng dự kiến</th>
+                <td>
+                    @Model.Booking?.CheckOutDate.ToString("dd/MM/yyyy HH:mm")
+                </td>
+            </tr>
+
+            <tr>
+                <th>Giờ trả phòng thực tế</th>
+                <td>
+                    @if (Model.Booking?.ActualCheckOutTime != null)
+                    {
+                        @Model.Booking.ActualCheckOutTime.Value.ToString("dd/MM/yyyy HH:mm")
+                    }
+                    else
+                    {
+                        <span>Chưa trả</span>
+                    }
+                </td>
+            </tr>
+
+            <tr>
+                <th>Tiền phòng cơ bản</th>
+                <td>
+                    @baseRoomAmount.ToString("N0") VNĐ
+                </td>
+            </tr>
+
+            <tr>
+                <th>Phụ thu trả phòng trễ</th>
+                <td>
+                    @if (lateCheckoutFee > 0)
+                    {
+                        <span class="text-danger fw-bold">
+                            @lateCheckoutFee.ToString("N0") VNĐ
+                        </span>
+                    }
+                    else
+                    {
+                        <span>0 VNĐ</span>
+                    }
+                </td>
+            </tr>
+
+            <tr>
+                <th>Tổng tiền phòng</th>
+                <td>
+                    @Model.RoomAmount.ToString("N0") VNĐ
+                </td>
+            </tr>
+        }
+
+        <tr>
+            <th>Tiền dịch vụ</th>
+            <td>
+                @Model.ServiceAmount.ToString("N0") VNĐ
+            </td>
+        </tr>
+
+        <tr>
+            <th>Tổng thanh toán</th>
+            <td class="text-danger fw-bold">
+                @Model.TotalAmount.ToString("N0") VNĐ
+            </td>
+        </tr>
+
+        <tr>
+            <th>Trạng thái thanh toán</th>
+            <td>
+                @if (Model.PaymentStatus == "DaThanhToan")
+                {
+                    <span class="badge bg-success">
+                        Đã thanh toán
+                    </span>
+                }
+                else
+                {
+                    <span class="badge bg-danger">
+                        Chưa thanh toán
+                    </span>
+                }
+            </td>
+        </tr>
+
+        <tr>
+            <th>Thời gian thanh toán</th>
+            <td>
+                @if (Model.PaymentDate != null)
+                {
+                    @Model.PaymentDate.Value.ToString("dd/MM/yyyy HH:mm")
+                }
+                else
+                {
+                    <span>Chưa có</span>
+                }
+            </td>
+        </tr>
+
+    </table>
+
+    <h3 class="mt-4">
+        DỊCH VỤ ĐÃ SỬ DỤNG
+    </h3>
+
+    <table class="table table-bordered">
+
+        <thead class="table-dark">
+            <tr>
+                <th>STT</th>
+                <th>Tên dịch vụ</th>
+                <th>Số lượng</th>
+                <th>Thành tiền</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            @{
+                int stt = 1;
+            }
+
+            @foreach (var item in ViewBag.Services)
+            {
+                <tr>
+                    <td>@stt</td>
+
+                    <td>
+                        @item.Service?.ServiceName
+                    </td>
+
+                    <td>
+                        @item.Quantity
+                    </td>
+
+                    <td class="text-danger">
+                        @item.TotalPrice.ToString("N0") VNĐ
+                    </td>
+                </tr>
+
+                stt++;
+            }
+
+        </tbody>
+
+    </table>
+
+    <a asp-controller="Booking"
+       asp-action="Index"
+       class="btn btn-secondary">
+        Quay lại danh sách đặt phòng
+    </a>
+
+</div>

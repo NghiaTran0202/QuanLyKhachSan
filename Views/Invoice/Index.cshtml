@@ -1,0 +1,198 @@
+﻿@model IEnumerable<quanlykhachsan.Models.Invoice>
+
+@{
+    ViewData["Title"] = "Quản lý hóa đơn";
+}
+
+<div class="container-fluid mt-4 px-4">
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Success"]
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert"
+                    aria-label="Close">
+            </button>
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["Error"]
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert"
+                    aria-label="Close">
+            </button>
+        </div>
+    }
+
+    <form asp-action="Search" method="get">
+
+        <div class="row mb-3">
+
+            <div class="col-md-4">
+
+                <input type="text"
+                       name="keyword"
+                       value="@ViewBag.Keyword"
+                       class="form-control"
+                       placeholder="Nhập tên khách hàng hoặc số phòng..." />
+
+            </div>
+
+            <div class="col-md-2">
+
+                <button type="submit"
+                        class="btn btn-primary">
+                    Tìm kiếm
+                </button>
+
+            </div>
+
+        </div>
+
+    </form>
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+
+        <h2>QUẢN LÝ HÓA ĐƠN</h2>
+
+    </div>
+
+    <div class="table-responsive">
+
+        <table class="table table-bordered table-hover table-striped text-nowrap">
+
+            <thead class="table-dark">
+
+                <tr>
+
+                    <th>Mã HĐ</th>
+
+                    <th>Khách hàng</th>
+
+                    <th>Phòng</th>
+
+                    <th>Ngày lập</th>
+
+                    <th>Tiền phòng</th>
+
+                    <th>Tiền dịch vụ</th>
+
+                    <th>Tổng tiền</th>
+
+                    <th>Thanh toán</th>
+
+                    <th>Chức năng</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                @foreach (var item in Model)
+                {
+                    <tr>
+
+                        <td>@item.InvoiceId</td>
+
+                        <td>@item.Booking?.Customer?.FullName</td>
+
+                        <td>@item.Booking?.Room?.RoomNumber</td>
+
+                        <td>
+                            @item.InvoiceDate.ToString("dd/MM/yyyy")
+                        </td>
+
+                        <td>
+                            @item.RoomAmount.ToString("N0") VNĐ
+                        </td>
+
+                        <td>
+                            @item.ServiceAmount.ToString("N0") VNĐ
+                        </td>
+
+                        <td class="text-danger fw-bold">
+                            @item.TotalAmount.ToString("N0") VNĐ
+                        </td>
+
+                        <td>
+                            @if (item.PaymentStatus == "DaThanhToan")
+                            {
+                                <span class="badge bg-success">
+                                    Đã thanh toán
+                                </span>
+
+                                @if (item.PaymentDate != null)
+                                {
+                                    <div class="small mt-1">
+                                        @item.PaymentDate.Value.ToString("dd/MM/yyyy HH:mm")
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger">
+                                    Chưa thanh toán
+                                </span>
+
+                                @if (item.Booking != null &&
+                                     item.Booking.Status == "DaTraPhong")
+                                {
+                                    <form asp-action="MarkAsPaid"
+                                          asp-route-id="@item.InvoiceId"
+                                          method="post"
+                                          class="d-inline ms-1">
+
+                                        @Html.AntiForgeryToken()
+
+                                        <button type="submit"
+                                                class="btn btn-success btn-sm">
+                                            Thanh toán
+                                        </button>
+
+                                    </form>
+                                }
+                            }
+                        </td>
+
+                        <td>
+
+                            <a asp-action="Details"
+                               asp-route-id="@item.InvoiceId"
+                               class="btn btn-warning btn-sm">
+                                Xem
+                            </a>
+
+                            @if (item.PaymentStatus != "DaThanhToan")
+                            {
+                                <a asp-action="Edit"
+                                   asp-route-id="@item.InvoiceId"
+                                   class="btn btn-warning btn-sm">
+                                    Sửa
+                                </a>
+
+                                <a asp-action="Delete"
+                                   asp-route-id="@item.InvoiceId"
+                                   class="btn btn-warning btn-sm">
+                                    Xóa
+                                </a>
+                            }
+
+                        </td>
+
+                    </tr>
+                }
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>

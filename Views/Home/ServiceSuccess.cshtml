@@ -1,0 +1,96 @@
+﻿@model quanlykhachsan.Models.BookingService
+
+@{
+    ViewData["Title"] = "Đặt dịch vụ thành công";
+}
+
+<div class="container mt-5 mb-5">
+
+    <div class="card shadow mx-auto"
+         style="max-width:800px;">
+
+        <div class="card-header text-white text-center py-4" style="background:var(--color-primary);">
+
+            <h2 class="fw-bold mb-0 text-white fst-italic">
+                ĐẶT DỊCH VỤ THÀNH CÔNG
+            </h2>
+
+        </div>
+
+        <div class="card-body p-4">
+
+            <div class="alert alert-success">
+                Cảm ơn quý khách đã sử dụng dịch vụ của khách sạn.
+            </div>
+
+            <table class="table table-bordered">
+
+                <tr>
+                    <th style="width:35%;">
+                        Khách hàng
+                    </th>
+
+                    <td>
+                        @Model.Booking?.Customer?.FullName
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>
+                        Số phòng
+                    </th>
+
+                    <td>
+                        @Model.Booking?.Room?.RoomNumber
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>
+                        Dịch vụ
+                    </th>
+
+                    <td>
+                        @Model.Service?.ServiceName
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>
+                        Số lượng
+                    </th>
+
+                    <td>
+                        @Model.Quantity
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>
+                        Thành tiền
+                    </th>
+
+                    <td class="text-danger fw-bold">
+                        @Model.TotalPrice.ToString("N0") VNĐ
+                    </td>
+                </tr>
+
+            </table>
+
+            <div class="text-center mt-4">
+
+                <a asp-controller="Home"
+                   asp-action="Index"
+                   class="btn btn-primary">
+
+                    Quay về Trang chủ
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

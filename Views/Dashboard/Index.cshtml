@@ -1,0 +1,201 @@
+﻿@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="container-fluid">
+
+    <div class="alert alert-primary shadow">
+
+        <h2 class="fw-bold">
+            Xin chào, Nhóm CTRL SHIFT N
+        </h2>
+
+        <p class="mb-0">
+            Chào mừng bạn đến hệ thống Quản lý khách sạn.
+        </p>
+
+    </div>
+
+    <div class="row">
+
+        <div class="col-md-3 mb-3">
+            <div class="card bg-primary text-white shadow">
+                <div class="card-body text-center">
+                    <h2>@ViewBag.TotalRooms</h2>
+                    <h5>Tổng phòng</h5>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <div class="card bg-success text-white shadow">
+                <div class="card-body text-center">
+                    <h2>@ViewBag.EmptyRooms</h2>
+                    <h5>Phòng trống</h5>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <div class="card bg-danger text-white shadow">
+                <div class="card-body text-center">
+                    <h2>@ViewBag.UsingRooms</h2>
+                    <h5>Đang sử dụng</h5>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <div class="card bg-warning shadow">
+                <div class="card-body text-center">
+                    <h2>@ViewBag.TotalCustomers</h2>
+                    <h5>Khách hàng</h5>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row">
+
+        <div class="col-md-6 mb-3">
+            <div class="card shadow">
+                <div class="card-body text-center">
+                    <h2>@ViewBag.TotalBookings</h2>
+                    <h5>Tổng lượt đặt phòng</h5>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <div class="card shadow">
+                <div class="card-body text-center">
+                    <h2 class="text-success">
+                        @String.Format("{0:N0}", ViewBag.TotalRevenue) VNĐ
+                    </h2>
+                    <h5>Doanh thu</h5>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <hr />
+
+    <h4 class="mb-3">Chức năng quản lý</h4>
+
+    <div class="row">
+
+        <div class="col-md-3 mb-3">
+            <a asp-controller="Room"
+               asp-action="Index"
+               class="btn btn-primary w-100">
+                 Quản lý phòng
+            </a>
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <a asp-controller="Customer"
+               asp-action="Index"
+               class="btn btn-success w-100">
+                 Khách hàng
+            </a>
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <a asp-controller="Booking"
+               asp-action="Index"
+               class="btn btn-warning w-100">
+                 Đặt phòng
+            </a>
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <a asp-controller="Invoice"
+               asp-action="Index"
+               class="btn btn-danger w-100">
+                 Hóa đơn
+            </a>
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <a asp-controller="Service"
+               asp-action="Index"
+               class="btn btn-info w-100 text-white">
+                 Dịch vụ
+            </a>
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <a asp-controller="Contact"
+               asp-action="List"
+               class="btn btn-dark w-100">
+
+                 Liên hệ khách hàng
+
+                @if (ViewBag.UnreadContacts > 0)
+                {
+                    <span class="badge bg-danger ms-2">
+
+                        @ViewBag.UnreadContacts
+
+                    </span>
+                }
+
+            </a>
+        </div>
+
+    </div>
+
+</div>
+<hr />
+
+<div class="card shadow mt-4">
+
+    <div class="card-header bg-primary text-white">
+
+        Doanh thu theo tháng
+
+    </div>
+
+    <div class="card-body">
+
+        <canvas id="revenueChart" height="100"></canvas>
+
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+    const revenue = @Html.Raw(ViewBag.ChartData);
+
+    new Chart(document.getElementById("revenueChart"), {
+
+    type: 'bar',
+
+    data: {
+
+    labels: [
+
+    "T1","T2","T3","T4","T5","T6",
+
+    "T7","T8","T9","T10","T11","T12"
+
+    ],
+
+    datasets: [{
+
+    label: 'Doanh thu',
+
+    data: revenue
+
+    }]
+
+    }
+
+    });
+
+</script>

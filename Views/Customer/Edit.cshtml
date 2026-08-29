@@ -1,0 +1,53 @@
+﻿@model quanlykhachsan.Models.Customer
+
+@{
+    ViewData["Title"] = "Sửa khách hàng";
+}
+
+<h2 class="mb-3">SỬA KHÁCH HÀNG</h2>
+
+<form asp-action="Edit">
+
+    <input asp-for="CustomerId" type="hidden" />
+
+    <div class="mb-3">
+        <label asp-for="FullName"></label>
+        <input asp-for="FullName" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Phone"></label>
+        <input asp-for="Phone" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Email"></label>
+        <input asp-for="Email" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Address"></label>
+        <input asp-for="Address" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="CCCD"></label>
+        <input asp-for="CCCD" class="form-control" />
+    </div>
+
+    <button class="btn btn-primary">
+        Cập nhật
+    </button>
+
+    <a asp-action="Index"
+       class="btn btn-secondary">
+        Quay lại
+    </a>
+
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

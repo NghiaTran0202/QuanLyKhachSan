@@ -1,0 +1,143 @@
+﻿@model quanlykhachsan.Models.Booking
+
+@{
+    ViewData["Title"] = "Đổi phòng";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">ĐỔI PHÒNG</h2>
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["Error"]
+        </div>
+    }
+
+    <div class="card p-4">
+        <div class="mb-3">
+            <strong>Mã đặt phòng:</strong>
+            @Model.BookingId
+        </div>
+
+        <div class="mb-3">
+            <strong>Khách hàng:</strong>
+            @(Model.Customer?.FullName ?? "Không xác định")
+        </div>
+
+        <div class="mb-3">
+            <strong>Phòng hiện tại:</strong>
+            @(Model.Room?.RoomNumber ?? "Không xác định")
+        </div>
+
+        <div class="mb-3">
+            <strong>Giá phòng hiện tại:</strong>
+            @(Model.Room?.Price.ToString("N0") ?? "0") VNĐ
+        </div>
+
+        <hr />
+
+        <form asp-action="ChangeRoom" method="post">
+
+            <input type="hidden"
+                   name="bookingId"
+                   value="@Model.BookingId" />
+
+            <div class="mb-3">
+                <label class="form-label">
+                    <strong>Phòng mới</strong>
+                </label>
+
+                <select name="newRoomId"
+                        class="form-select"
+                        required>
+
+                    <option value="">
+                        -- Chọn phòng mới --
+                    </option>
+
+                    @foreach (var room in ViewBag.AvailableRooms)
+                    {
+                        <option value="@room.RoomId">
+                            Phòng @room.RoomNumber -
+                            @room.RoomName -
+                            @room.Price.ToString("N0") VNĐ
+                        </option>
+                    }
+
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label d-block">
+                    <strong>Cách áp dụng giá</strong>
+                </label>
+
+                <div class="form-check mb-2">
+                    <input class="form-check-input"
+                           type="radio"
+                           name="priceMode"
+                           id="keepCurrentPrice"
+                           value="KeepCurrent"
+                           checked />
+
+                    <label class="form-check-label"
+                           for="keepCurrentPrice">
+                        Giữ giá hiện tại
+                    </label>
+                </div>
+
+                <div class="form-check mb-2">
+                    <input class="form-check-input"
+                           type="radio"
+                           name="priceMode"
+                           id="useNewRoomPrice"
+                           value="UseNewRoomPrice" />
+
+                    <label class="form-check-label"
+                           for="useNewRoomPrice">
+                        Áp dụng giá phòng mới
+                    </label>
+                </div>
+
+                <div class="form-check">
+                    <input class="form-check-input"
+                           type="radio"
+                           name="priceMode"
+                           id="correctWrongRoom"
+                           value="CorrectWrongRoom" />
+
+                    <label class="form-check-label"
+                           for="correctWrongRoom">
+                        Sửa phòng đặt nhầm
+                    </label>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">
+                    <strong>Lý do đổi phòng</strong>
+                </label>
+
+                <textarea name="reason"
+                          class="form-control"
+                          rows="3"
+                          placeholder="Nhập lý do đổi phòng"></textarea>
+            </div>
+
+            <div class="mt-4">
+                <button type="submit"
+                        class="btn btn-warning"
+                        onclick="return confirm('Bạn có chắc muốn đổi phòng?');">
+                    Xác nhận đổi phòng
+                </button>
+
+                <a asp-action="Index"
+                   class="btn btn-secondary">
+                    Hủy
+                </a>
+            </div>
+
+        </form>
+    </div>
+</div>

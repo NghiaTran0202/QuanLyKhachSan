@@ -1,0 +1,80 @@
+﻿@model IEnumerable<quanlykhachsan.Models.BookingService>
+
+@{
+    ViewData["Title"] = "Lịch sử dịch vụ";
+}
+
+<div class="container mt-4">
+
+    <h2 class="mb-4">
+        LỊCH SỬ DỊCH VỤ ĐÃ SỬ DỤNG
+    </h2>
+
+    <table class="table table-bordered table-hover">
+
+        <thead class="table-dark">
+
+            <tr>
+
+                <th>Mã</th>
+
+                <th>Khách hàng</th>
+
+                <th>Phòng</th>
+
+                <th>Dịch vụ</th>
+
+                <th>Số lượng</th>
+
+                <th>Thành tiền</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+
+                    <td>@item.BookingServiceId</td>
+
+                    <td>@item.Booking?.Customer?.FullName</td>
+
+                    <td>@item.Booking?.Room?.RoomNumber</td>
+
+                    <td>@item.Service?.ServiceName</td>
+
+                    <td>@item.Quantity</td>
+
+                    <td class="text-danger fw-bold">
+                        @item.TotalPrice.ToString("N0") VNĐ
+                    </td>
+
+                </tr>
+            }
+
+        </tbody>
+
+        <tfoot>
+
+            <tr>
+
+                <td colspan="5" class="text-end fw-bold">
+                    Tổng doanh thu dịch vụ
+                </td>
+
+                <td class="text-danger fw-bold">
+                    @Model.Sum(x => x.TotalPrice).ToString("N0") VNĐ
+                </td>
+
+            </tr>
+
+        </tfoot>
+
+    </table>
+
+    </table>
+
+</div>

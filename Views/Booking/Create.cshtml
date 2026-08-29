@@ -1,0 +1,482 @@
+﻿@model quanlykhachsan.Models.BookingCreateViewModel
+
+@{
+    ViewData["Title"] = "Thêm đặt phòng";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">Thêm đặt phòng</h2>
+
+    <form asp-action="Create" method="post">
+        @Html.AntiForgeryToken()
+
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+        <input asp-for="CustomerId" type="hidden" id="CustomerId" />
+        <input asp-for="IsNewCustomer" type="hidden" id="IsNewCustomer" />
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <strong>Thông tin khách hàng</strong>
+            </div>
+
+            <div class="card-body">
+                <div class="mb-3">
+                    <label class="form-label">Khách hàng</label>
+
+                    <select id="customerSelector" class="form-select">
+                        <option value="">-- Chọn khách hàng --</option>
+                        <option value="new">+ Khách hàng mới</option>
+
+                        @foreach (var customer in ViewBag.Customers)
+                        {
+                            <option value="@customer.CustomerId"
+                                    data-phone="@customer.Phone"
+                                    data-email="@customer.Email"
+                                    data-cccd="@customer.CCCD">
+                                @customer.FullName
+                            </option>
+                        }
+                    </select>
+
+                    <span asp-validation-for="CustomerId" class="text-danger"></span>
+                </div>
+
+                <div id="existingCustomerInfo" style="display:none;">
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Số điện thoại</label>
+                            <input id="existingPhone"
+                                   class="form-control"
+                                   readonly />
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Email</label>
+                            <input id="existingEmail"
+                                   class="form-control"
+                                   readonly />
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">CCCD</label>
+                            <input id="existingCCCD"
+                                   class="form-control"
+                                   readonly />
+                        </div>
+                    </div>
+                </div>
+
+                <div id="newCustomerFields" style="display:none;">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="FullName" class="form-label">
+                                Họ và tên
+                            </label>
+
+                            <input asp-for="FullName"
+                                   class="form-control"
+                                   placeholder="Nhập họ và tên" />
+
+                            <span asp-validation-for="FullName"
+                                  class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Phone" class="form-label">
+                                Số điện thoại
+                            </label>
+
+                            <input asp-for="Phone"
+                                   class="form-control"
+                                   placeholder="Nhập số điện thoại" />
+
+                            <span asp-validation-for="Phone"
+                                  class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Email" class="form-label">
+                                Email
+                            </label>
+
+                            <input asp-for="Email"
+                                   class="form-control"
+                                   placeholder="Nhập email" />
+
+                            <span asp-validation-for="Email"
+                                  class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="CCCD" class="form-label">
+                                CCCD
+                            </label>
+
+                            <input asp-for="CCCD"
+                                   class="form-control"
+                                   placeholder="Nhập CCCD" />
+
+                            <span asp-validation-for="CCCD"
+                                  class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <strong>Thông tin đặt phòng</strong>
+            </div>
+
+            <div class="card-body">
+                <div class="mb-3">
+                    <label asp-for="RoomId" class="form-label">
+                        Phòng
+                    </label>
+
+                    <select asp-for="RoomId"
+                            class="form-select">
+                        <option value="0">-- Chọn phòng --</option>
+
+                        @foreach (var room in ViewBag.Rooms)
+                        {
+                            <option value="@room.RoomId">
+                                Phòng @room.RoomNumber - @room.RoomName
+                                - Giá ngày: @room.Price.ToString("N0") VNĐ
+                                - Giờ đầu: @room.HourlyPrice.ToString("N0") VNĐ
+                            </option>
+                        }
+                    </select>
+
+                    <span asp-validation-for="RoomId"
+                          class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="BookingType" class="form-label">
+                        Loại đặt phòng
+                    </label>
+
+                    <select asp-for="BookingType"
+                            id="BookingType"
+                            class="form-select">
+                        <option value="Ngay">Theo ngày</option>
+                        <option value="Gio">Theo giờ</option>
+                    </select>
+
+                    <span asp-validation-for="BookingType"
+                          class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">
+                        Hình thức nhận phòng
+                    </label>
+
+                    <div class="form-check">
+                        <input asp-for="CheckInNow"
+                               class="form-check-input"
+                               type="radio"
+                               value="true"
+                               id="CheckInNowTrue" />
+
+                        <label class="form-check-label"
+                               for="CheckInNowTrue">
+                            Nhận phòng ngay
+                        </label>
+                    </div>
+
+                    <div class="form-check">
+                        <input asp-for="CheckInNow"
+                               class="form-check-input"
+                               type="radio"
+                               value="false"
+                               id="CheckInNowFalse" />
+
+                        <label class="form-check-label"
+                               for="CheckInNowFalse">
+                            Đặt trước
+                        </label>
+                    </div>
+
+                    <div class="form-text">
+                        Chọn "Nhận phòng ngay" nếu khách đang có mặt tại khách sạn.
+                    </div>
+                </div>
+
+                <div id="HoursBookedGroup"
+                     class="mb-3"
+                     style="display:none;">
+                    <label asp-for="HoursBooked" class="form-label">
+                        Số giờ thuê
+                    </label>
+
+                    <input asp-for="HoursBooked"
+                           type="number"
+                           min="1"
+                           class="form-control" />
+
+                    <span asp-validation-for="HoursBooked"
+                          class="text-danger"></span>
+
+                    <div class="form-text">
+                        Giờ đầu tính theo giá của phòng. Mỗi giờ tiếp theo cộng thêm 100.000 VNĐ.
+                    </div>
+                </div>
+
+                <div id="HourlyAdvanceFields"
+                     class="mb-3"
+                     style="display:none;">
+                    <label asp-for="HourlyCheckInDateTime"
+                           class="form-label">
+                        Ngày và giờ nhận phòng dự kiến
+                    </label>
+
+                    <input asp-for="HourlyCheckInDateTime"
+                           type="datetime-local"
+                           class="form-control" />
+
+                    <span asp-validation-for="HourlyCheckInDateTime"
+                          class="text-danger"></span>
+                </div>
+
+                <div id="DailyBookingFields">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="CheckInDate"
+                                   class="form-label">
+                                Ngày nhận phòng
+                            </label>
+
+                            <input asp-for="CheckInDate"
+                                   type="date"
+                                   class="form-control" />
+
+                            <span asp-validation-for="CheckInDate"
+                                  class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="CheckOutDate"
+                                   class="form-label">
+                                Ngày trả phòng
+                            </label>
+
+                            <input asp-for="CheckOutDate"
+                                   type="date"
+                                   class="form-control" />
+
+                            <span asp-validation-for="CheckOutDate"
+                                  class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="NumberOfGuests"
+                           class="form-label">
+                        Số người
+                    </label>
+
+                    <input asp-for="NumberOfGuests"
+                           type="number"
+                           min="1"
+                           max="20"
+                           class="form-control" />
+
+                    <span asp-validation-for="NumberOfGuests"
+                          class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex gap-2">
+            <button type="submit"
+                    class="btn btn-primary">
+                Thêm đặt phòng
+            </button>
+
+            <a asp-action="Index"
+               class="btn btn-secondary">
+                Quay lại
+            </a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const customerSelector =
+                document.getElementById("customerSelector");
+
+            const customerId =
+                document.getElementById("CustomerId");
+
+            const isNewCustomer =
+                document.getElementById("IsNewCustomer");
+
+            const existingCustomerInfo =
+                document.getElementById("existingCustomerInfo");
+
+            const newCustomerFields =
+                document.getElementById("newCustomerFields");
+
+            const existingPhone =
+                document.getElementById("existingPhone");
+
+            const existingEmail =
+                document.getElementById("existingEmail");
+
+            const existingCCCD =
+                document.getElementById("existingCCCD");
+
+            const bookingType =
+                document.getElementById("BookingType");
+
+            const hoursBookedGroup =
+                document.getElementById("HoursBookedGroup");
+
+            const dailyBookingFields =
+                document.getElementById("DailyBookingFields");
+
+            const hourlyAdvanceFields =
+                document.getElementById("HourlyAdvanceFields");
+
+            const checkInNowTrue =
+                document.getElementById("CheckInNowTrue");
+
+            const checkInNowFalse =
+                document.getElementById("CheckInNowFalse");
+
+            function updateCustomerForm() {
+                const selectedValue =
+                    customerSelector.value;
+
+                if (selectedValue === "new") {
+                    customerId.value = "";
+                    isNewCustomer.value = "true";
+
+                    existingCustomerInfo.style.display =
+                        "none";
+
+                    newCustomerFields.style.display =
+                        "block";
+
+                    existingPhone.value = "";
+                    existingEmail.value = "";
+                    existingCCCD.value = "";
+
+                    return;
+                }
+
+                if (selectedValue === "") {
+                    customerId.value = "";
+                    isNewCustomer.value = "false";
+
+                    existingCustomerInfo.style.display =
+                        "none";
+
+                    newCustomerFields.style.display =
+                        "none";
+
+                    return;
+                }
+
+                customerId.value =
+                    selectedValue;
+
+                isNewCustomer.value =
+                    "false";
+
+                newCustomerFields.style.display =
+                    "none";
+
+                existingCustomerInfo.style.display =
+                    "block";
+
+                const selectedOption =
+                    customerSelector.options[
+                    customerSelector.selectedIndex
+                    ];
+
+                existingPhone.value =
+                    selectedOption.dataset.phone || "";
+
+                existingEmail.value =
+                    selectedOption.dataset.email || "";
+
+                existingCCCD.value =
+                    selectedOption.dataset.cccd || "";
+            }
+
+            function updateBookingType() {
+                if (bookingType.value === "Gio") {
+                    hoursBookedGroup.style.display =
+                        "block";
+
+                    dailyBookingFields.style.display =
+                        "none";
+
+                    if (checkInNowFalse.checked) {
+                        hourlyAdvanceFields.style.display =
+                            "block";
+                    }
+                    else {
+                        hourlyAdvanceFields.style.display =
+                            "none";
+                    }
+                }
+                else {
+                    hoursBookedGroup.style.display =
+                        "none";
+
+                    dailyBookingFields.style.display =
+                        "block";
+
+                    hourlyAdvanceFields.style.display =
+                        "none";
+                }
+            }
+
+            customerSelector.addEventListener(
+                "change",
+                updateCustomerForm
+            );
+
+            bookingType.addEventListener(
+                "change",
+                updateBookingType
+            );
+
+            checkInNowTrue.addEventListener(
+                "change",
+                updateBookingType
+            );
+
+            checkInNowFalse.addEventListener(
+                "change",
+                updateBookingType
+            );
+
+            if (isNewCustomer.value.toLowerCase() === "true") {
+                customerSelector.value = "new";
+            }
+            else if (customerId.value) {
+                customerSelector.value =
+                    customerId.value;
+            }
+
+            updateCustomerForm();
+            updateBookingType();
+        });
+    </script>
+}

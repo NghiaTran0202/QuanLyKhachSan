@@ -1,0 +1,1262 @@
+﻿@model quanlykhachsan.Models.BookingRequestModel
+
+@{
+    ViewData["Title"] = "Đặt phòng";
+
+    bool lockRoom =
+        ViewBag.LockRoom != null &&
+        ViewBag.LockRoom == true;
+}
+
+<div class="page-banner">
+    <p>Chỉ vài bước đơn giản</p>
+    <h2>Đặt phòng khách sạn</h2>
+</div>
+
+<div class="container mt-4 mb-5">
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["Error"]
+        </div>
+    }
+
+    <form asp-controller="Home"
+          asp-action="Booking"
+          method="post"
+          class="form-card"
+          id="bookingForm">
+
+        @Html.AntiForgeryToken()
+
+        <input type="hidden"
+               name="lockRoom"
+               value="@(lockRoom ? "true" : "false")" />
+
+        <input asp-for="HourlyCheckInDateTime"
+               type="hidden"
+               id="hourlyCheckInDateTime" />
+
+        <div asp-validation-summary="All"
+             class="text-danger mb-3">
+        </div>
+
+        <div class="row">
+
+            <div class="col-md-6">
+
+                <label class="form-label">
+                    Họ và tên
+                </label>
+
+                <input asp-for="FullName"
+                       class="form-control" />
+
+                <span asp-validation-for="FullName"
+                      class="text-danger"></span>
+
+            </div>
+
+            <div class="col-md-6">
+
+                <label class="form-label">
+                    Số điện thoại
+                </label>
+
+                <input asp-for="Phone"
+                       class="form-control" />
+
+                <span asp-validation-for="Phone"
+                      class="text-danger"></span>
+
+            </div>
+
+        </div>
+
+        <br />
+
+        <div class="row">
+
+            <div class="col-md-6">
+
+                <label class="form-label">
+                    Email
+                </label>
+
+                <input asp-for="Email"
+                       class="form-control" />
+
+                <span asp-validation-for="Email"
+                      class="text-danger"></span>
+
+            </div>
+
+            <div class="col-md-6">
+
+                <label class="form-label">
+                    CCCD
+                </label>
+
+                <input asp-for="CCCD"
+                       class="form-control" />
+
+                <span asp-validation-for="CCCD"
+                      class="text-danger"></span>
+
+            </div>
+
+        </div>
+
+        <br />
+
+        <div class="row">
+
+            <div class="col-md-6">
+
+                <label class="form-label">
+                    Hình thức thuê
+                </label>
+
+                <select asp-for="BookingType"
+                        class="form-select"
+                        id="bookingTypeSelect">
+
+                    <option value="Ngay">
+                        Theo ngày
+                    </option>
+
+                    <option value="Gio">
+                        Theo giờ
+                    </option>
+
+                </select>
+
+                <span asp-validation-for="BookingType"
+                      class="text-danger"></span>
+
+            </div>
+
+            <div class="col-md-6">
+
+                <label class="form-label">
+                    Số người
+                </label>
+
+                <input asp-for="NumberOfGuests"
+                       type="number"
+                       min="1"
+                       max="20"
+                       class="form-control"
+                       id="numberOfGuests" />
+
+                <div class="form-text"
+                     id="guestCapacityText">
+                    Chọn loại phòng để xem số khách tối đa.
+                </div>
+
+                <span asp-validation-for="NumberOfGuests"
+                      class="text-danger"></span>
+
+            </div>
+
+        </div>
+
+        <br />
+
+        <div id="dailyFields">
+
+            <div class="row">
+
+                <div class="col-md-6">
+
+                    <label class="form-label">
+                        Ngày nhận phòng
+                    </label>
+
+                    <input asp-for="CheckInDate"
+                           type="date"
+                           class="form-control"
+                           id="dailyCheckInDate" />
+
+                    <div class="form-text">
+                        Giờ nhận phòng tiêu chuẩn: 14:00
+                    </div>
+
+                    <span asp-validation-for="CheckInDate"
+                          class="text-danger"></span>
+
+                </div>
+
+                <div class="col-md-6">
+
+                    <label class="form-label">
+                        Ngày trả phòng
+                    </label>
+
+                    <input asp-for="CheckOutDate"
+                           type="date"
+                           class="form-control"
+                           id="dailyCheckOutDate" />
+
+                    <div class="form-text">
+                        Giờ trả phòng tiêu chuẩn: 12:00
+                    </div>
+
+                    <span asp-validation-for="CheckOutDate"
+                          class="text-danger"></span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div id="hourlyFields"
+             style="display:none;">
+
+            <div class="row">
+
+                <div class="col-md-4">
+
+                    <label class="form-label">
+                        Ngày nhận phòng
+                    </label>
+
+                    <input type="date"
+                           class="form-control"
+                           id="hourlyDate" />
+
+                </div>
+
+                <div class="col-md-2">
+
+                    <label class="form-label">
+                        Giờ
+                    </label>
+
+                    <select class="form-select"
+                            id="hourlyHour">
+
+                        @for (int hour = 0; hour <= 23; hour++)
+                        {
+                            <option value="@hour.ToString("00")">
+                                @hour.ToString("00")
+                            </option>
+                        }
+
+                    </select>
+
+                </div>
+
+                <div class="col-md-2">
+
+                    <label class="form-label">
+                        Phút
+                    </label>
+
+                    <select class="form-select"
+                            id="hourlyMinute">
+
+                        <option value="00">00</option>
+                        <option value="15">15</option>
+                        <option value="30">30</option>
+                        <option value="45">45</option>
+
+                    </select>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <label class="form-label">
+                        Số giờ thuê
+                    </label>
+
+                    <input asp-for="HoursBooked"
+                           type="number"
+                           min="1"
+                           max="24"
+                           class="form-control"
+                           id="hoursBooked" />
+
+                    <div class="form-text">
+                        Giờ đầu tính theo giá của phòng. Mỗi giờ tiếp theo cộng thêm 100.000 VNĐ.
+                    </div>
+
+                    <span asp-validation-for="HoursBooked"
+                          class="text-danger"></span>
+
+                </div>
+
+            </div>
+
+            <div class="mt-3">
+
+                <strong>
+                    Thời gian nhận:
+                </strong>
+
+                <span id="hourlySelectedTime">
+                    Chưa xác định
+                </span>
+
+            </div>
+
+            <div class="mt-1">
+
+                <strong>
+                    Giờ trả phòng dự kiến:
+                </strong>
+
+                <span id="hourlyExpectedCheckout">
+                    Chưa xác định
+                </span>
+
+            </div>
+
+            <span asp-validation-for="HourlyCheckInDateTime"
+                  class="text-danger">
+            </span>
+
+        </div>
+
+        <br />
+
+        @if (lockRoom && ViewBag.SelectedRoom != null)
+        {
+            <div class="row">
+
+                <div class="col-md-6">
+
+                    <label class="form-label">
+                        Loại phòng
+                    </label>
+
+                    <input type="text"
+                           class="form-control"
+                           value="@ViewBag.SelectedRoom.RoomType?.TypeName"
+                           readonly />
+
+                    <input asp-for="RoomTypeId"
+                           type="hidden" />
+
+                </div>
+
+                <div class="col-md-6">
+
+                    <label class="form-label">
+                        Phòng đã chọn
+                    </label>
+
+                    <input type="text"
+                           class="form-control"
+                           value="Phòng @ViewBag.SelectedRoom.RoomNumber - @ViewBag.SelectedRoom.RoomName"
+                           readonly />
+
+                    <input asp-for="RoomId"
+                           type="hidden" />
+
+                    <input type="hidden"
+                           id="selectedRoomDailyPrice"
+                           value="@ViewBag.SelectedRoom.Price" />
+
+                    <input type="hidden"
+                           id="selectedRoomHourlyPrice"
+                           value="@ViewBag.SelectedRoom.HourlyPrice" />
+
+                </div>
+
+            </div>
+        }
+        else
+        {
+            <div class="row">
+
+                <div class="col-md-6">
+
+                    <label class="form-label">
+                        Loại phòng
+                    </label>
+
+                    <select asp-for="RoomTypeId"
+                            class="form-select"
+                            id="roomTypeSelect">
+
+                        <option value="">
+                            -- Chọn loại phòng --
+                        </option>
+
+                        @foreach (var item in ViewBag.RoomTypes)
+                        {
+                            <option value="@item.RoomTypeId"
+                                    data-max-guests="@item.MaxGuests">
+                                @item.TypeName - Tối đa @item.MaxGuests khách
+                            </option>
+                        }
+
+                    </select>
+
+                    <span asp-validation-for="RoomTypeId"
+                          class="text-danger"></span>
+
+                </div>
+
+                <div class="col-md-6">
+
+                    <label class="form-label">
+                        Phòng cụ thể
+                    </label>
+
+                    <select asp-for="RoomId"
+                            class="form-select"
+                            id="roomSelect">
+
+                        <option value="">
+                            -- Chọn loại phòng trước --
+                        </option>
+
+                    </select>
+
+                    <span asp-validation-for="RoomId"
+                          class="text-danger"></span>
+
+                </div>
+
+            </div>
+        }
+
+        <br />
+
+        @if (lockRoom && ViewBag.SelectedRoom != null)
+        {
+            var roomBookings =
+                ViewBag.SelectedRoomBookings as IEnumerable<quanlykhachsan.Models.Booking>;
+
+            <div class="alert alert-warning">
+
+                <div class="mb-2">
+                    <strong>
+                        Lịch đã đặt của phòng @ViewBag.SelectedRoom.RoomNumber trong 30 ngày tới
+                    </strong>
+                </div>
+
+                @if (roomBookings != null && roomBookings.Any())
+                {
+                    <div class="table-responsive">
+
+                        <table class="table table-bordered bg-white mb-0">
+
+                            <thead>
+                                <tr>
+                                    <th>Hình thức thuê</th>
+                                    <th>Thời gian đã đặt</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+
+                                @foreach (var booking in roomBookings)
+                                {
+                                    <tr>
+                                        <td>
+                                            @if (booking.BookingType == "Gio")
+                                            {
+                                                <span class="badge bg-warning text-dark">
+                                                    Theo giờ
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-primary">
+                                                    Theo ngày
+                                                </span>
+                                            }
+                                        </td>
+
+                                        <td>
+                                            @booking.CheckInDate.ToString("dd/MM/yyyy HH:mm")
+                                            →
+                                            @booking.CheckOutDate.ToString("dd/MM/yyyy HH:mm")
+                                        </td>
+                                    </tr>
+                                }
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                    <div class="form-text mt-2">
+                        Nếu thời gian bạn muốn đặt bị trùng, hãy chọn thời gian khác hoặc quay lại chọn phòng khác.
+                    </div>
+                }
+                else
+                {
+                    <div>
+                        Phòng này chưa có lịch đặt trong 30 ngày tới.
+                    </div>
+                }
+
+            </div>
+
+            <br />
+        }
+
+        <div class="alert alert-info">
+
+            <div>
+                <strong>Chính sách giá:</strong>
+            </div>
+
+            <div id="dailyPolicy">
+                Thuê theo ngày: nhận phòng lúc 14:00 và trả phòng lúc 12:00 ngày trả.
+            </div>
+
+            <div id="hourlyPolicy"
+                 style="display:none;">
+                Thuê theo giờ: giờ đầu tính theo giá giờ của phòng, mỗi giờ tiếp theo cộng 100.000 VNĐ. Trả muộn không quá 15 phút không tính thêm giờ.
+            </div>
+
+            <div class="mt-2">
+
+                <strong>
+                    Chi phí dự kiến:
+                </strong>
+
+                <span id="estimatedPrice">
+                    Chưa xác định
+                </span>
+
+            </div>
+
+        </div>
+
+        <button type="submit"
+                class="btn btn-success">
+
+            Đặt phòng
+
+        </button>
+
+        <a asp-controller="Home"
+           asp-action="Rooms"
+           class="btn btn-secondary">
+
+            Quay lại
+
+        </a>
+
+    </form>
+
+</div>
+
+@section Scripts
+{
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        const bookingForm =
+            document.getElementById("bookingForm");
+
+        const bookingTypeSelect =
+            document.getElementById("bookingTypeSelect");
+
+        const dailyFields =
+            document.getElementById("dailyFields");
+
+        const hourlyFields =
+            document.getElementById("hourlyFields");
+
+        const dailyPolicy =
+            document.getElementById("dailyPolicy");
+
+        const hourlyPolicy =
+            document.getElementById("hourlyPolicy");
+
+        const dailyCheckInDate =
+            document.getElementById("dailyCheckInDate");
+
+        const dailyCheckOutDate =
+            document.getElementById("dailyCheckOutDate");
+
+        const hourlyDate =
+            document.getElementById("hourlyDate");
+
+        const hourlyHour =
+            document.getElementById("hourlyHour");
+
+        const hourlyMinute =
+            document.getElementById("hourlyMinute");
+
+        const hourlyCheckInDateTime =
+            document.getElementById("hourlyCheckInDateTime");
+
+        const hoursBooked =
+            document.getElementById("hoursBooked");
+
+        const hourlySelectedTime =
+            document.getElementById("hourlySelectedTime");
+
+        const hourlyExpectedCheckout =
+            document.getElementById("hourlyExpectedCheckout");
+
+        const estimatedPrice =
+            document.getElementById("estimatedPrice");
+
+        const numberOfGuests =
+            document.getElementById("numberOfGuests");
+
+        const guestCapacityText =
+            document.getElementById("guestCapacityText");
+
+        let selectedDailyPrice = 0;
+        let selectedHourlyPrice = 0;
+
+        function formatMoney(value) {
+
+            return Number(value)
+                .toLocaleString("vi-VN") + " VNĐ";
+        }
+
+        function formatDateTime24Hour(date) {
+
+            if (!date ||
+                Number.isNaN(date.getTime())) {
+
+                return "Chưa xác định";
+            }
+
+            const day =
+                String(date.getDate())
+                    .padStart(2, "0");
+
+            const month =
+                String(date.getMonth() + 1)
+                    .padStart(2, "0");
+
+            const year =
+                date.getFullYear();
+
+            const hour =
+                String(date.getHours())
+                    .padStart(2, "0");
+
+            const minute =
+                String(date.getMinutes())
+                    .padStart(2, "0");
+
+            return `${hour}:${minute} - ${day}/${month}/${year}`;
+        }
+
+        function combineHourlyDateTime() {
+
+            if (!hourlyDate.value) {
+
+                hourlyCheckInDateTime.value = "";
+
+                hourlySelectedTime.textContent =
+                    "Chưa xác định";
+
+                return null;
+            }
+
+            const hour =
+                hourlyHour.value;
+
+            const minute =
+                hourlyMinute.value;
+
+            const value =
+                `${hourlyDate.value}T${hour}:${minute}`;
+
+            hourlyCheckInDateTime.value =
+                value;
+
+            const date =
+                new Date(value);
+
+            if (Number.isNaN(date.getTime())) {
+
+                hourlySelectedTime.textContent =
+                    "Chưa xác định";
+
+                return null;
+            }
+
+            hourlySelectedTime.textContent =
+                formatDateTime24Hour(date);
+
+            return date;
+        }
+
+        function updateHourlyExpectedCheckout() {
+
+            const start =
+                combineHourlyDateTime();
+
+            const hours =
+                Number(hoursBooked.value);
+
+            if (!start ||
+                hours <= 0) {
+
+                hourlyExpectedCheckout.textContent =
+                    "Chưa xác định";
+
+                return;
+            }
+
+            const end =
+                new Date(
+                    start.getTime() +
+                    hours *
+                    60 *
+                    60 *
+                    1000
+                );
+
+            hourlyExpectedCheckout.textContent =
+                formatDateTime24Hour(end);
+        }
+
+        function updateBookingType() {
+
+            const bookingType =
+                bookingTypeSelect.value;
+
+            if (bookingType === "Gio") {
+
+                dailyFields.style.display =
+                    "none";
+
+                hourlyFields.style.display =
+                    "block";
+
+                dailyPolicy.style.display =
+                    "none";
+
+                hourlyPolicy.style.display =
+                    "block";
+
+                combineHourlyDateTime();
+            }
+            else {
+
+                dailyFields.style.display =
+                    "block";
+
+                hourlyFields.style.display =
+                    "none";
+
+                dailyPolicy.style.display =
+                    "block";
+
+                hourlyPolicy.style.display =
+                    "none";
+            }
+
+            updateEstimatedPrice();
+        }
+
+        function updateEstimatedPrice() {
+
+            const bookingType =
+                bookingTypeSelect.value;
+
+            if (bookingType === "Gio") {
+
+                const hours =
+                    Number(hoursBooked.value);
+
+                if (selectedHourlyPrice <= 0 ||
+                    hours <= 0) {
+
+                    estimatedPrice.textContent =
+                        "Chưa xác định";
+
+                    updateHourlyExpectedCheckout();
+
+                    return;
+                }
+
+                const total =
+                    selectedHourlyPrice +
+                    Math.max(
+                        0,
+                        hours - 1
+                    ) *
+                    100000;
+
+                estimatedPrice.textContent =
+                    formatMoney(total);
+
+                updateHourlyExpectedCheckout();
+
+                return;
+            }
+
+            if (!dailyCheckInDate.value ||
+                !dailyCheckOutDate.value ||
+                selectedDailyPrice <= 0) {
+
+                estimatedPrice.textContent =
+                    "Chưa xác định";
+
+                return;
+            }
+
+            const checkIn =
+                new Date(
+                    dailyCheckInDate.value +
+                    "T00:00:00"
+                );
+
+            const checkOut =
+                new Date(
+                    dailyCheckOutDate.value +
+                    "T00:00:00"
+                );
+
+            const diff =
+                checkOut - checkIn;
+
+            const nights =
+                Math.round(
+                    diff /
+                    (
+                        1000 *
+                        60 *
+                        60 *
+                        24
+                    )
+                );
+
+            if (nights <= 0) {
+
+                estimatedPrice.textContent =
+                    "Ngày trả phòng phải sau ngày nhận phòng";
+
+                return;
+            }
+
+            estimatedPrice.textContent =
+                formatMoney(
+                    selectedDailyPrice *
+                    nights
+                );
+        }
+
+        bookingTypeSelect.addEventListener(
+            "change",
+            updateBookingType
+        );
+
+        dailyCheckInDate.addEventListener(
+            "change",
+            updateEstimatedPrice
+        );
+
+        dailyCheckOutDate.addEventListener(
+            "change",
+            updateEstimatedPrice
+        );
+
+        hourlyDate.addEventListener(
+            "change",
+            updateEstimatedPrice
+        );
+
+        hourlyHour.addEventListener(
+            "change",
+            updateEstimatedPrice
+        );
+
+        hourlyMinute.addEventListener(
+            "change",
+            updateEstimatedPrice
+        );
+
+        hoursBooked.addEventListener(
+            "input",
+            updateEstimatedPrice
+        );
+
+        bookingForm.addEventListener(
+            "submit",
+            function() {
+
+                if (bookingTypeSelect.value === "Gio") {
+
+                    combineHourlyDateTime();
+                }
+            }
+        );
+
+        @if (lockRoom && ViewBag.SelectedRoom != null)
+            {
+                <text>
+                        selectedDailyPrice =
+                        Number(
+                        document.getElementById(
+                        "selectedRoomDailyPrice"
+                        ).value
+                        );
+
+                        selectedHourlyPrice =
+                        Number(
+                        document.getElementById(
+                        "selectedRoomHourlyPrice"
+                        ).value
+                        );
+                </text>
+        }
+
+            updateBookingType();
+    </script>
+
+    @if (!lockRoom)
+    {
+        <script>
+            const roomTypeSelect =
+                document.getElementById("roomTypeSelect");
+
+            const roomSelect =
+                document.getElementById("roomSelect");
+
+            function updateGuestCapacity() {
+
+                const selectedOption =
+                    roomTypeSelect.options[
+                    roomTypeSelect.selectedIndex
+                    ];
+
+                if (!selectedOption ||
+                    !selectedOption.value) {
+
+                    numberOfGuests.max = "20";
+
+                    guestCapacityText.textContent =
+                        "Chọn loại phòng để xem số khách tối đa.";
+
+                    return;
+                }
+
+                const maxGuests =
+                    Number(
+                        selectedOption.dataset.maxGuests ||
+                        20
+                    );
+
+                numberOfGuests.max =
+                    maxGuests.toString();
+
+                guestCapacityText.textContent =
+                    `Loại phòng này cho phép tối đa ${maxGuests} khách.`;
+            }
+
+            function filterRoomTypesByGuests() {
+
+                const guests =
+                    Number(numberOfGuests.value);
+
+                Array.from(
+                    roomTypeSelect.options
+                ).forEach(option => {
+
+                    if (!option.value) {
+                        option.hidden = false;
+                        option.disabled = false;
+                        return;
+                    }
+
+                    const maxGuests =
+                        Number(
+                            option.dataset.maxGuests ||
+                            0
+                        );
+
+                    const unavailable =
+                        guests > 0 &&
+                        maxGuests > 0 &&
+                        guests > maxGuests;
+
+                    option.hidden = unavailable;
+                    option.disabled = unavailable;
+                });
+
+                const selectedOption =
+                    roomTypeSelect.options[
+                    roomTypeSelect.selectedIndex
+                    ];
+
+                if (selectedOption &&
+                    selectedOption.value &&
+                    selectedOption.disabled) {
+
+                    roomTypeSelect.value = "";
+                    roomSelect.innerHTML =
+                        '<option value="">-- Chọn loại phòng phù hợp số khách --</option>';
+
+                    selectedDailyPrice = 0;
+                    selectedHourlyPrice = 0;
+
+                    updateEstimatedPrice();
+                }
+
+                updateGuestCapacity();
+            }
+
+            async function loadAvailableRooms() {
+
+                const roomTypeId =
+                    roomTypeSelect.value;
+
+                const previousRoomId =
+                    roomSelect.value;
+
+                selectedDailyPrice = 0;
+                selectedHourlyPrice = 0;
+
+                updateEstimatedPrice();
+
+                if (!roomTypeId) {
+
+                    roomSelect.innerHTML =
+                        '<option value="">-- Chọn loại phòng trước --</option>';
+
+                    return;
+                }
+
+                roomSelect.innerHTML =
+                    '<option value="">-- Đang tải phòng --</option>';
+
+                const params =
+                    new URLSearchParams();
+
+                params.append(
+                    "roomTypeId",
+                    roomTypeId
+                );
+
+                params.append(
+                    "bookingType",
+                    bookingTypeSelect.value
+                );
+
+                if (bookingTypeSelect.value === "Ngay") {
+
+                    if (dailyCheckInDate.value) {
+
+                        params.append(
+                            "checkInDate",
+                            dailyCheckInDate.value
+                        );
+                    }
+
+                    if (dailyCheckOutDate.value) {
+
+                        params.append(
+                            "checkOutDate",
+                            dailyCheckOutDate.value
+                        );
+                    }
+                }
+                else {
+
+                    const hourlyStart =
+                        combineHourlyDateTime();
+
+                    if (hourlyStart &&
+                        hourlyCheckInDateTime.value) {
+
+                        params.append(
+                            "hourlyCheckInDateTime",
+                            hourlyCheckInDateTime.value
+                        );
+                    }
+
+                    const hours =
+                        Number(hoursBooked.value);
+
+                    if (hours > 0) {
+
+                        params.append(
+                            "hoursBooked",
+                            hours.toString()
+                        );
+                    }
+                }
+
+                try {
+
+                    const response =
+                        await fetch(
+                            `/Home/GetAvailableRooms?${params.toString()}`
+                        );
+
+                    if (!response.ok) {
+
+                        roomSelect.innerHTML =
+                            '<option value="">-- Không tải được danh sách phòng --</option>';
+
+                        return;
+                    }
+
+                    const rooms =
+                        await response.json();
+
+                    roomSelect.innerHTML =
+                        '<option value="">-- Chọn phòng --</option>';
+
+                    if (rooms.length === 0) {
+
+                        roomSelect.innerHTML =
+                            '<option value="">-- Không có phòng trống trong thời gian đã chọn --</option>';
+
+                        return;
+                    }
+
+                    rooms.forEach(room => {
+
+                        const option =
+                            document.createElement("option");
+
+                        option.value =
+                            room.roomId;
+
+                        option.dataset.dailyPrice =
+                            room.price;
+
+                        option.dataset.hourlyPrice =
+                            room.hourlyPrice;
+
+                        option.textContent =
+                            `Phòng ${room.roomNumber} - ${room.roomName} - Giá ngày: ${Number(room.price).toLocaleString("vi-VN")} VNĐ - Giờ đầu: ${Number(room.hourlyPrice).toLocaleString("vi-VN")} VNĐ`;
+
+                        if (String(room.roomId) ===
+                            String(previousRoomId)) {
+
+                            option.selected =
+                                true;
+
+                            selectedDailyPrice =
+                                Number(room.price);
+
+                            selectedHourlyPrice =
+                                Number(room.hourlyPrice);
+                        }
+
+                        roomSelect.appendChild(option);
+                    });
+
+                    updateEstimatedPrice();
+                }
+                catch {
+
+                    roomSelect.innerHTML =
+                        '<option value="">-- Có lỗi khi tải phòng --</option>';
+                }
+            }
+
+            roomTypeSelect.addEventListener(
+                "change",
+                function() {
+                    updateGuestCapacity();
+                    loadAvailableRooms();
+                }
+            );
+
+            numberOfGuests.addEventListener(
+                "input",
+                function() {
+                    filterRoomTypesByGuests();
+
+                    if (roomTypeSelect.value) {
+                        loadAvailableRooms();
+                    }
+                }
+            );
+
+            bookingTypeSelect.addEventListener(
+                "change",
+                loadAvailableRooms
+            );
+
+            dailyCheckInDate.addEventListener(
+                "change",
+                loadAvailableRooms
+            );
+
+            dailyCheckOutDate.addEventListener(
+                "change",
+                loadAvailableRooms
+            );
+
+            hourlyDate.addEventListener(
+                "change",
+                loadAvailableRooms
+            );
+
+            hourlyHour.addEventListener(
+                "change",
+                loadAvailableRooms
+            );
+
+            hourlyMinute.addEventListener(
+                "change",
+                loadAvailableRooms
+            );
+
+            hoursBooked.addEventListener(
+                "input",
+                loadAvailableRooms
+            );
+
+            roomSelect.addEventListener(
+                "change",
+                function() {
+
+                    const option =
+                        this.options[
+                        this.selectedIndex
+                        ];
+
+                    if (!option ||
+                        !option.value) {
+
+                        selectedDailyPrice = 0;
+                        selectedHourlyPrice = 0;
+
+                        updateEstimatedPrice();
+
+                        return;
+                    }
+
+                    selectedDailyPrice =
+                        Number(
+                            option.dataset.dailyPrice ||
+                            0
+                        );
+
+                    selectedHourlyPrice =
+                        Number(
+                            option.dataset.hourlyPrice ||
+                            0
+                        );
+
+                    updateEstimatedPrice();
+                }
+            );
+
+            filterRoomTypesByGuests();
+
+            if (roomTypeSelect.value) {
+
+                loadAvailableRooms();
+            }
+        </script>
+    }
+
+}

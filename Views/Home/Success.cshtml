@@ -1,0 +1,189 @@
+﻿@model quanlykhachsan.Models.Booking
+
+@{
+    ViewData["Title"] = "Đặt phòng thành công";
+
+    bool isHourly =
+        Model.BookingType == "Gio";
+}
+
+<div class="container mt-5">
+
+    <div class="card shadow">
+
+        <div class="card-header text-white text-center"
+             style="background:var(--color-primary);">
+
+            <h2 class="text-white fst-italic">
+                ĐẶT PHÒNG THÀNH CÔNG
+            </h2>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="alert alert-success">
+
+                Cảm ơn quý khách đã sử dụng dịch vụ của chúng tôi.
+
+            </div>
+
+            <div class="alert alert-warning">
+
+                <div class="d-flex align-items-start">
+
+                    <i class="bi bi-camera-fill me-3 fs-4"></i>
+
+                    <div>
+
+                        <strong>
+                            LƯU Ý QUAN TRỌNG
+                        </strong>
+
+                        <div class="mt-1">
+                            Hãy chụp lại thông tin đặt phòng bên dưới
+                            để thuận tiện cho việc xác nhận khi nhận phòng.
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <table class="table table-bordered">
+
+                <tr>
+                    <th width="250">
+                        Mã đặt phòng
+                    </th>
+
+                    <td>
+                        @($"BK{Model.BookingId:D5}")
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>Họ và tên</th>
+                    <td>@Model.Customer?.FullName</td>
+                </tr>
+
+                <tr>
+                    <th>Số điện thoại</th>
+                    <td>@Model.Customer?.Phone</td>
+                </tr>
+
+                <tr>
+                    <th>Email</th>
+                    <td>@Model.Customer?.Email</td>
+                </tr>
+
+                <tr>
+                    <th>Căn cước</th>
+                    <td>@Model.Customer?.CCCD</td>
+                </tr>
+
+                <tr>
+                    <th>Phòng</th>
+                    <td>
+                        @Model.Room?.RoomNumber - @Model.Room?.RoomName
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>Hình thức thuê</th>
+
+                    <td>
+                        @if (isHourly)
+                        {
+                            <span>Theo giờ</span>
+                        }
+                        else
+                        {
+                            <span>Theo ngày</span>
+                        }
+                    </td>
+                </tr>
+
+                @if (isHourly)
+                {
+                    <tr>
+                        <th>Thời gian nhận phòng</th>
+
+                        <td>
+                            @Model.CheckInDate.ToString("dd/MM/yyyy HH:mm")
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th>Thời gian trả phòng</th>
+
+                        <td>
+                            @Model.CheckOutDate.ToString("dd/MM/yyyy HH:mm")
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th>Số giờ thuê</th>
+
+                        <td>
+                            @Model.HoursBooked giờ
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    <tr>
+                        <th>Thời gian nhận phòng</th>
+
+                        <td>
+                            @Model.CheckInDate.ToString("dd/MM/yyyy HH:mm")
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th>Thời gian trả phòng</th>
+
+                        <td>
+                            @Model.CheckOutDate.ToString("dd/MM/yyyy HH:mm")
+                        </td>
+                    </tr>
+                }
+
+                <tr>
+                    <th>Chi phí dự kiến</th>
+
+                    <td>
+                        <strong>
+                            @Model.TotalAmount.ToString("N0") VNĐ
+                        </strong>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>Trạng thái</th>
+
+                    <td class="text-success">
+                        @Model.Status
+                    </td>
+                </tr>
+
+            </table>
+
+            <div class="text-center">
+
+                <a asp-controller="Home"
+                   asp-action="Index"
+                   class="btn btn-primary">
+
+                    Quay về Trang chủ
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

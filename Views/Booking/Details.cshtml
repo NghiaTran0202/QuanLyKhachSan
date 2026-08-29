@@ -1,0 +1,248 @@
+﻿@model quanlykhachsan.Models.Booking
+
+@{
+    ViewData["Title"] = "Chi tiết lưu trú";
+}
+
+<div class="container mt-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>CHI TIẾT LƯU TRÚ</h2>
+
+        <a asp-action="Index" class="btn btn-secondary">
+            Quay lại
+        </a>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header bg-dark text-white">
+            <h5 class="mb-0">Thông tin lưu trú</h5>
+        </div>
+
+        <div class="card-body">
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <strong>Mã đặt phòng:</strong>
+                    @Model.BookingId
+                </div>
+
+                <div class="col-md-6">
+                    <strong>Khách hàng:</strong>
+                    @(Model.Customer?.FullName ?? "Không có")
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <strong>Phòng hiện tại:</strong>
+                    @(Model.Room?.RoomNumber ?? "Không có")
+                </div>
+
+                <div class="col-md-6">
+                    <strong>Số người:</strong>
+                    @Model.NumberOfGuests
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <strong>Ngày nhận phòng dự kiến:</strong>
+                    @Model.CheckInDate.ToString("dd/MM/yyyy HH:mm")
+                </div>
+
+                <div class="col-md-6">
+                    <strong>Giờ nhận phòng thực tế:</strong>
+                    @(Model.ActualCheckInTime?.ToString("dd/MM/yyyy HH:mm")
+                        ?? "Chưa nhận")
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <strong>Ngày trả phòng dự kiến:</strong>
+                    @Model.CheckOutDate.ToString("dd/MM/yyyy HH:mm")
+                </div>
+
+                <div class="col-md-6">
+                    <strong>Giờ trả phòng thực tế:</strong>
+                    @(Model.ActualCheckOutTime?.ToString("dd/MM/yyyy HH:mm")
+                        ?? "Chưa trả")
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <strong>Loại thuê:</strong>
+
+                    @if (Model.BookingType == "Gio")
+                    {
+                        <span>Theo giờ</span>
+
+                        @if (Model.HoursBooked > 0)
+                        {
+                            <span>
+                                (@Model.HoursBooked giờ)
+                            </span>
+                        }
+                    }
+                    else
+                    {
+                        <span>Theo ngày</span>
+                    }
+                </div>
+
+                <div class="col-md-6">
+                    <strong>Trạng thái:</strong>
+
+                    @if (Model.Status == "DaTraPhong")
+                    {
+                        <span class="badge bg-success">
+                            Đã trả phòng
+                        </span>
+                    }
+                    else if (Model.Status == "Đã đặt")
+                    {
+                        <span class="badge bg-secondary">
+                            Đã đặt
+                        </span>
+                    }
+                    else if (Model.Status == "Đang thuê")
+                    {
+                        <span class="badge bg-warning text-dark">
+                            Đang thuê
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-secondary">
+                            @Model.Status
+                        </span>
+                    }
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <strong>Tổng tiền hiện tại:</strong>
+                    @Model.TotalAmount.ToString("N0") VNĐ
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="card">
+
+        <div class="card-header bg-dark text-white">
+            <h5 class="mb-0">Lịch sử đổi phòng</h5>
+        </div>
+
+        <div class="card-body">
+
+            @if (Model.RoomChangeHistories != null &&
+                 Model.RoomChangeHistories.Any())
+            {
+                <div class="table-responsive">
+
+                    <table class="table table-bordered table-hover">
+
+                        <thead class="table-light">
+                            <tr>
+                                <th>STT</th>
+                                <th>Phòng cũ</th>
+                                <th>Phòng mới</th>
+                                <th>Giá phòng cũ</th>
+                                <th>Giá phòng mới</th>
+                                <th>Giá áp dụng</th>
+                                <th>Cách áp dụng giá</th>
+                                <th>Thời gian</th>
+                                <th>Lý do</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            @{
+                                int stt = 1;
+                            }
+
+                            @foreach (var history in Model.RoomChangeHistories
+                                .OrderByDescending(x => x.ChangedAt))
+                            {
+                                <tr>
+
+                                    <td>@stt</td>
+
+                                    <td>
+                                        @(history.OldRoom?.RoomNumber ?? history.OldRoomId.ToString())
+                                    </td>
+
+                                    <td>
+                                        @(history.NewRoom?.RoomNumber ?? history.NewRoomId.ToString())
+                                    </td>
+
+                                    <td>
+                                        @history.OldRoomPrice.ToString("N0") VNĐ
+                                    </td>
+
+                                    <td>
+                                        @history.NewRoomPrice.ToString("N0") VNĐ
+                                    </td>
+
+                                    <td>
+                                        @history.AppliedPrice.ToString("N0") VNĐ
+                                    </td>
+
+                                    <td>
+                                        @if (history.PriceMode == "KeepCurrent")
+                                        {
+                                            <span>Giữ giá hiện tại</span>
+                                        }
+                                        else if (history.PriceMode == "UseNewRoomPrice")
+                                        {
+                                            <span>Áp dụng giá phòng mới</span>
+                                        }
+                                        else if (history.PriceMode == "CorrectWrongRoom")
+                                        {
+                                            <span>Sửa phòng đặt nhầm</span>
+                                        }
+                                        else
+                                        {
+                                            <span>@history.PriceMode</span>
+                                        }
+                                    </td>
+
+                                    <td>
+                                        @history.ChangedAt.ToString("dd/MM/yyyy HH:mm")
+                                    </td>
+
+                                    <td>
+                                        @(string.IsNullOrWhiteSpace(history.Reason)
+                                            ? "Không nhập lý do"
+                                            : history.Reason)
+                                    </td>
+
+                                </tr>
+
+                                stt++;
+                            }
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-info mb-0">
+                    Booking này chưa có lịch sử đổi phòng.
+                </div>
+            }
+
+        </div>
+
+    </div>
+
+</div>

@@ -1,0 +1,60 @@
+﻿@{
+    ViewData["Title"] = "Đăng nhập";
+}
+
+<div class="page-banner">
+    <p>Khu vực quản trị</p>
+    <h2>Đăng nhập</h2>
+</div>
+
+<div class="row justify-content-center mt-3 mb-5">
+
+    <div class="col-md-4">
+
+        <div class="card shadow">
+
+            <div class="card-header text-white text-center" style="background:var(--color-primary);">
+                <h3 class="text-white fst-italic">ĐĂNG NHẬP ADMIN</h3>
+            </div>
+
+            <div class="card-body">
+
+                @if (ViewBag.Error != null)
+                {
+                    <div class="alert alert-danger">
+                        @ViewBag.Error
+                    </div>
+                }
+
+                <form method="post">
+
+                    <div class="mb-3">
+                        <label class="form-label">Tên đăng nhập</label>
+                        <input type="text"
+                               name="username"
+                               class="form-control"
+                               required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Mật khẩu</label>
+                        <input type="password"
+                               name="password"
+                               class="form-control"
+                               required />
+                    </div>
+
+                    <button type="submit"
+                            class="btn btn-primary w-100">
+                        Đăng nhập
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

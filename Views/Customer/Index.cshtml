@@ -1,0 +1,65 @@
+﻿@model IEnumerable<quanlykhachsan.Models.Customer>
+
+@{
+    ViewData["Title"] = "Quản lý khách hàng";
+}
+
+<h2 class="mb-3">QUẢN LÝ KHÁCH HÀNG</h2>
+
+<a asp-action="Create" class="btn btn-success mb-3">
+    + Thêm khách hàng
+</a>
+
+<table class="table table-bordered table-hover">
+
+    <thead class="table-dark">
+
+        <tr>
+            <th>Mã</th>
+            <th>Họ tên</th>
+            <th>Điện thoại</th>
+            <th>Email</th>
+            <th>CCCD</th>
+            <th width="180">Chức năng</th>
+        </tr>
+
+    </thead>
+
+    <tbody>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+
+                <td>@item.CustomerId</td>
+
+                <td>@item.FullName</td>
+
+                <td>@item.Phone</td>
+
+                <td>@item.Email</td>
+
+                <td>@item.CCCD</td>
+
+                <td>
+
+                    <a asp-action="Edit"
+                       asp-route-id="@item.CustomerId"
+                       class="btn btn-warning btn-sm">
+                        Sửa
+                    </a>
+
+                    <a asp-action="Delete"
+                       asp-route-id="@item.CustomerId"
+                       class="btn btn-danger btn-sm">
+                        Xóa
+                    </a>
+
+                </td>
+
+            </tr>
+        }
+
+    </tbody>
+
+</table>
